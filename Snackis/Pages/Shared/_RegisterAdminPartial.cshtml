@@ -1,0 +1,22 @@
+﻿@using Snackis.Pages
+@model Models.AdminRegisterModel
+
+<form asp-page-handler="registeradmin">
+    <div>
+        <label asp-for="Password">Password</label>
+        <input asp-for="Password" />
+    </div>
+    <div>
+        <label asp-for="Confirm">Confirm password</label>
+        <input asp-for="Confirm" />
+    </div>
+    <div>
+        <label asp-for="Email">Admin Email</label>
+        <input asp-for="Email" />
+    </div>
+    <div>
+        <label asp-for="Name">Admin name</label>
+        <input asp-for="Name" />
+    </div>
+    <button id="submit" type="submit">Create admin account!</button>
+</form>

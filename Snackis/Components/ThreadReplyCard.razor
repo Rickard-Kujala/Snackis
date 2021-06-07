@@ -1,0 +1,115 @@
+﻿@inject Repositories.IPostRepository _postRepository;
+@*<div class="card mb-2" style="width:80%">
+        <div class="card-body p-2 p-sm-3">
+            <div class="media forum-item">
+                <a href="#" data-toggle="collapse" data-target=".forum-content"><img src="https://bootdey.com/img/Content/avatar/avatar1.png" class="mr-3 rounded-circle" width="50" alt="User" /></a>
+                <div class="media-body text-break">
+                    <h6><a href="#" data-toggle="collapse" data-target=".forum-content" class="text-body">RE: @AllPosts.Single(p => p.Id.ToString() == post.PostParent).Title</a></h6>
+                    <p class="text-secondary">
+                        @post.Text
+                    </p>
+                    <p class="text-muted"><a href="javascript:void(0)">drewdan</a> replied <span class="text-secondary font-weight-bold">@OriginPost.DateTime</span></p>
+                    <div class="text-muted small text-center align-self-center">
+                        <span class="d-none d-sm-inline-block"><i class="far fa-eye"></i> 19</span>
+                        <span><i class="far fa-comment ml-2"></i> 3</span>
+                        <form asp-page-handler="react" method="post">
+                            <button class="btn btn-default">
+                                <span><i class=" col-1 bi bi-hand-thumbs-up">@post.Likes</i></span>
+                            </button>
+                            <span><i class="col-1 bi bi-chat-left-text">@post.Replyes</i></span>
+                            <input type="hidden" name="id" value="@post.Id" />
+                            <input type="hidden" name="value" value="Likes" />
+                        </form>
+                        <button class="btn btn-primary has-icon" type="button" data-toggle="modal" data-target="#threadModal">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-plus mr-2">
+                                <line x1="5" y1="12" x2="19" y2="12"></line>
+                            </svg>
+                            <i class="bi bi-reply"></i>
+                        </button>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>*@
+<div class="card mb-2">
+    <div class="card-body p-2 p-sm-3">
+        <div class="media forum-item">
+            <a href="#" data-toggle="collapse" data-target=".forum-content"><img src="https://bootdey.com/img/Content/avatar/avatar1.png" class="mr-3 rounded-circle" width="50" alt="User" /></a>
+            <div class="media-body text-break">
+                <h6><a href="#" data-toggle="collapse" data-target=".forum-content" class="text-body">RE: @AllPosts.Single(p => p.Id.ToString() == post.PostParent).Title</a></h6>
+                <button class="btn btn-primary float-right" type="button" data-toggle="modal" data-target="#threadModal">
+                    <i class="bi bi-reply"></i>
+                </button>
+                @if (post.AbuseReport)
+                {
+                    <p class="text-secondary" style="filter:blur(2px)">
+                        @post.Text
+                    </p>
+                }
+                else
+                {
+                    <p class="text-secondary">
+                        @post.Text
+                    </p>
+                }
+                <p class="text-muted"><a href="javascript:void(0)">drewdan</a> replied <span class="text-secondary font-weight-bold">@OriginPost.DateTime</span></p>
+                <div class="text-muted small text-center align-self-center">
+                    <div class="row">
+                        <partial name="_ThreadPostReplyPartial" model="@post" />
+                        <form asp- asp-page-handler="react" method="post">
+            <button class="btn btn-default">
+                <i class=" col-1 bi bi-hand-thumbs-up">@post.Likes</i>
+            </button>
+            <input type="hidden" name="id" value="@post.Id" />
+            <input type="hidden" name="value" value="Likes" />
+        </form>
+        <form asp-page-handler="react" method="post">
+            <button class="btn btn-default">
+                <i class=" col-1 bi bi-hand-thumbs-down">@post.DisLikes</i>
+            </button>
+            <input type="hidden" name="id" value="@post.Id" />
+            <input type="hidden" name="value" value="Dislikes" />
+        </form>
+        <form asp-page-handler="react" method="post">
+            <button class="btn btn-default">
+                <i class="bi bi-flag"></i>
+            </button>
+            <input type="hidden" name="id" value="@post.Id" />
+            <input type="hidden" name="value" value="Abuse" />
+        </form>
+        <button class="btn btn-default" onclick="HideFunction('@post', 'message @post')">
+            <i id="message @post" class="col-1 bi bi-chat-left-text">@post.Replyes</i>
+        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@inject Models.PostFormService PostFormService;
+@code {
+    [Parameter]
+    public List<Models.Post> AllPosts { get; set; }
+
+    [Parameter]
+    public Models.Post post { get; set; }
+    [Parameter]
+    public Models.Post OriginPost { get; set; }
+    [Parameter]
+    public bool IsReply { get; set; }
+
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+
+
+        var data = PostFormService.Form?["data"];
+        
+
+        Console.WriteLine(data);
+
+    }
+}

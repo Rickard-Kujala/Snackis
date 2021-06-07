@@ -1,0 +1,78 @@
+﻿@page
+@model Snackis.Pages.Admin.IndexModel
+@{
+}
+<div class="container">
+    <div class="row">
+        <div class="col-4">
+            @foreach (var role in Model.Roles)
+            {
+                <p>@role.Name</p>
+            }
+            <h4>Användare</h4>
+            <form class="rounded" method="post">
+                <label for="RoleName">Ny Roll</label>
+                <input name="RoleName" />
+                <input type="submit" value="Spara roll" />
+            </form>
+        </div>
+        <div class="col-4">
+            <h4>Kategorier</h4>
+            @foreach (var category in Model.Categories.Where(p => p.Text == null))
+            {
+                <p>
+                    <a href="?deletecategoryid=@category.Id">@category.Category</a>
+                </p>
+
+            }
+            <form class="rounded" asp-page-handler="addcategory">
+                <div>
+                    <label asp-for="CategoryModel.Name">Skapa ny</label>
+                    <input asp-for="CategoryModel.Name" />
+                    <button id="submit" type="submit">Spara kategori</button>
+                </div>
+            </form>
+        </div>
+        <div class="row col-4">
+            <h4>Amälda inlägg</h4>
+            @foreach (var post in Model.AllPosts.Where(p => p.AbuseReport == true))
+            {
+                <button class="btn btn-default" onclick="HideFunction('@post.Id', 'message @post')">
+                    <p class="text-danger">@post.Nickname @post.DateTime</p>
+                </button>
+                <div id="@post.Id" style="display: none" class="card-body p-2 p-sm-3">
+                    <div class="media forum-item">
+                        <a href="#" data-toggle="collapse" data-target=".forum-content"><img src="https://bootdey.com/img/Content/avatar/avatar1.png" class="mr-3 rounded-circle" width="50" alt="User" /></a>
+                        <div class="media-body text-break">
+                            <h6><a href="#" data-toggle="collapse" data-target=".forum-content" class="text-body">RE: @Model.AllPosts.Single(p => p.Id.ToString() == post.PostParent).Title</a></h6>
+                            <button class="btn btn-primary float-right" type="button" data-toggle="modal" data-target="#threadModal">
+                                <i class="bi bi-reply"></i>
+                            </button>
+                            @if (post.AbuseReport)
+                            {
+                                <p class="text-secondary" style="filter:blur(2px)">
+                                    @post.Text
+                                </p>
+                            }
+                            else
+                            {
+                                <p class="text-secondary">
+                                    @post.Text
+                                </p>
+                            }
+                            <p class="text-muted"><a href="javascript:void(0)">drewdan</a> replied <span class="text-secondary font-weight-bold">@post.DateTime</span></p>
+                            <div class="text-muted small text-center align-self-center">
+                                <div class="row">
+                                    <partial name="_ThreadPostReplyPartial" model="@post" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+
+

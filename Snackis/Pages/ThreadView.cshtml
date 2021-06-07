@@ -1,0 +1,179 @@
+﻿@page
+@model Snackis.Pages.ThreadViewModel
+@{
+}
+<div class="main-body p-0">
+    <div class="inner-main-body p-2 p-sm-3 collapse forum-content show">
+                <div class="container">
+                    <table style="width:inherit">
+                        <thead>
+                            <tr>
+                                <td>
+                                    <div class="card-body bg-dark text-white">
+                                        <div class="row">
+                                            <h3 class="col-6">@Model.OriginPost.Title</h3>
+                                            <button class="btn btn-primary has-icon col-4 float-right" type="button" data-toggle="modal" data-target="#threadModal">
+                                                Gör ett inlägg i tråden
+                                            </button>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    @* Visa alla Trådar i kategorin *@
+                                    @if (Model.AllPosts != null)
+                                    {
+                                        <div class="card mb-2">
+                                            <div class="card-body p-2 p-sm-3">
+                                                <div class="media forum-item">
+                                                    <a href="#" data-toggle="collapse" data-target=".forum-content"><img src="https://bootdey.com/img/Content/avatar/avatar1.png" class="mr-3 rounded-circle" width="50" alt="User" /></a>
+                                                    <div class="media-body">
+                                                        <h6><a href="#" data-toggle="collapse" data-target=".forum-content" class="text-body">@Model.OriginPost.Title</a></h6>
+                                                        <p class="text-secondary">
+                                                            @Model.OriginPost.Text
+                                                        </p>
+                                                        <div class="text-muted small text-center align-self-center">
+                                                            <div class="row">
+                                                                <partial name="_ThreadPostReplyPartial" model="@Model.OriginPost" />
+                                                                @*<form asp-page-handler="react" method="post">
+            <button class="btn btn-default">
+                <i class=" col-1 bi bi-hand-thumbs-up">@Model.OriginPost.Likes</i>
+            </button>
+            <input type="hidden" name="id" value="@Model.OriginPost.Id" />
+            <input type="hidden" name="value" value="Likes" />
+        </form>*@
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        @foreach (var post in Model.AllPosts.Where(p => p.PostParent == Model.OriginPost.Id.ToString()))
+                                        {
+                                            @*<component type="typeof(Components.ThreadReplyCard)" render-mode="Static" param-allposts="@Model.AllPosts" param-originpost="@Model.OriginPost" param-post="@post" param-isreply="@Model.IsReply"/>*@
+
+                                                                <div class="card mb-2">
+                                        <div class="card-body p-2 p-sm-3">
+                                            <div class="media forum-item">
+                                                <a href="#" data-toggle="collapse" data-target=".forum-content"><img src="https://bootdey.com/img/Content/avatar/avatar1.png" class="mr-3 rounded-circle" width="50" alt="User" /></a>
+                                                <div class="media-body text-break">
+                                                    <h6><a href="#" data-toggle="collapse" data-target=".forum-content" class="text-body">RE: @Model.AllPosts.Single(p => p.Id.ToString() == post.PostParent).Title</a></h6>
+                                                    <button class="btn btn-primary float-right" type="button" data-toggle="modal" data-target="#threadModal">
+                                                        <i class="bi bi-reply"></i>
+                                                    </button>
+                                                    @if (post.AbuseReport)
+                                                    {
+                                                        <p class="text-secondary" style="filter:blur(2px)">
+                                                            @post.Text
+                                                        </p>
+                                                    }
+                                                    else
+                                                    {
+                                                    <p class="text-secondary">
+                                                        @post.Text
+                                                    </p>
+                                                    }
+                                                    <p class="text-muted"><a href="javascript:void(0)">drewdan</a> replied <span class="text-secondary font-weight-bold">@post.DateTime</span></p>
+                                                    <div class="text-muted small text-center align-self-center">
+                                                        <div class="row">
+                                                            <partial name="_ThreadPostReplyPartial" model="@post" />
+                                                            <button class="btn btn-default" onclick="HideFunction('@post', 'message @post')">
+                                                                <i id="message @post" class="col-1 bi bi-chat-left-text">@post.Replyes</i>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                            <div id="@post" style="display: none">
+                                                @foreach (var item in Model.AllPosts.Where(p => p.PostParent == post.Id.ToString()))
+                                                {
+                                                    @*<component type="typeof(Components.ThreadReplyCard)" render-mode="Static" param-allposts="@Model.AllPosts" param-originpost="@Model.OriginPost" param-post="@item" param-isreply="Model.IsReply" />*@
+                                    <div class="card mb-2" style="width:80%">
+                                       <div class="card-body p-2 p-sm-3">
+                                        <div class="media forum-item">
+                                            <a href="#" data-toggle="collapse" data-target=".forum-content"><img src="https://bootdey.com/img/Content/avatar/avatar1.png" class="mr-3 rounded-circle" width="50" alt="User" /></a>
+                                            <div class="media-body text-break">
+                                                <h6><a href="#" data-toggle="collapse" data-target=".forum-content" class="text-body">RE: @Model.AllPosts.Single(p => p.Id.ToString() == item.PostParent).Title</a></h6>
+                                                <p class="text-secondary">
+                                                    @item.Text
+                                                </p>
+                                                <p class="text-muted"><a href="javascript:void(0)">drewdan</a> replied <span class="text-secondary font-weight-bold">@Model.OriginPost.DateTime</span></p>
+                                                <div class="text-muted small text-center align-self-center">
+                                                    <span class="d-none d-sm-inline-block"><i class="far fa-eye"></i> 19</span>
+                                                    <span><i class="far fa-comment ml-2"></i> 3</span>
+                                                    <div class="row">
+                                                    <partial name="_ThreadPostReplyPartial" model="@post" />
+                                                    </div>
+
+                                                    @*<form asp-page-handler="react" method="post">
+            <button class="btn btn-default">
+                <span><i class=" col-1 bi bi-hand-thumbs-up">@item.Likes</i></span>
+            </button>
+            <span><i class="col-1 bi bi-chat-left-text">@item.Replyes</i></span>
+            <input type="hidden" name="id" value="@item.Id" />
+            <input type="hidden" name="value" value="Likes" />
+        </form>*@
+                                                    <button class="btn btn-primary has-icon" type="button" data-toggle="modal" data-target="#threadModal">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-plus mr-2">
+                                                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                                                        </svg>
+                                                        <i class="bi bi-reply"></i>
+                                                    </button>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                                }
+
+                                            </div>
+                                        }
+                                    }
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <!-- New Thread Modal -->
+                    <div class="modal fade" id="threadModal" tabindex="-1" role="dialog" aria-labelledby="threadModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-lg" role="document">
+                            <div class="modal-content">
+                                <form asp-page-handler="addpost">
+                                    <input type="hidden" asp-for="PostModel.UserId" value="@Model.MyUser.Id" />
+                                    <input type="hidden" asp-for="PostModel.Nickname" value="@Model.MyUser.NickName" />
+                                    <input type="hidden" asp-for="PostModel.Category" value="@Model.Category" />
+                                    <input type="hidden" name="ParentPostId" value="" />
+                                    <input type="hidden" asp-for="PostModel.PostParent" value="@Model.OriginPost.Id.ToString()" />
+                                    <div class="modal-header d-flex align-items-center bg-primary text-white">
+                                        <h6 class="modal-title mb-0" id="threadModalLabel">Svara i tråden</h6>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Stäng">
+                                            <span aria-hidden="true">×</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="form-group">
+                                            <label for="threadTitle">Skriv ditt svar här</label>
+                                            <input type="text" asp-for="PostModel.Text" class="form-control" id="threadTitle" placeholder="Skriv ditt svar här" autofocus="" />
+                                        </div>
+                                        <textarea class="form-control summernote" style="display: none;"></textarea>
+                                        <div class="custom-file form-control-sm mt-3" style="max-width: 300px;">
+                                            <input type="file" class="custom-file-input" id="customFile" multiple="" />
+                                            <label class="custom-file-label" for="customFile">Attachment</label>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-light" data-dismiss="modal">Avbryt</button>
+                                        <button type="submit" class="btn btn-primary">Skicka</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
