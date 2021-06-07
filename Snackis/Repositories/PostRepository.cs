@@ -82,7 +82,8 @@ namespace Snackis.Repositories
                     AbuseReport = false,
                     PostParent = postModel.PostParent,
                     UserId = postModel.UserId,
-                    Nickname = postModel.Nickname
+                    Nickname = postModel.Nickname,
+                    ImageURL=postModel.ImageURL
 
                 };
                 return await client.PostAsJsonAsync(_configuration["SnackisAPIPost"], post);

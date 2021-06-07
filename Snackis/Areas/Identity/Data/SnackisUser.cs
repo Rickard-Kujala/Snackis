@@ -15,7 +15,7 @@ namespace Snackis.Areas.Identity.Data
         [PersonalData]
         public string NickName { get; set; }
         [PersonalData]
-        public Byte[] Image { get; set; }
+        public byte[] Image { get; set; }
 
     }
 }

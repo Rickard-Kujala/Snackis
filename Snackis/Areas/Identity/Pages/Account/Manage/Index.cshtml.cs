@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
@@ -30,6 +31,9 @@ namespace Snackis.Areas.Identity.Pages.Account.Manage
 
         [BindProperty]
         public InputModel Input { get; set; }
+        [BindProperty(SupportsGet =true)]
+        public string ImageURL { get; set; }
+
 
         public class InputModel
         {
@@ -46,7 +50,8 @@ namespace Snackis.Areas.Identity.Pages.Account.Manage
             [Display(Name = "Födelseår")]
             public int BirthYear { get; set; }
             // <-- Ny kod
-
+            [BindProperty]
+            public byte[] Image { get; set; }
 
         }
 
@@ -61,7 +66,9 @@ namespace Snackis.Areas.Identity.Pages.Account.Manage
             {
                 PhoneNumber = phoneNumber,
                 NickName = user.NickName,
-                BirthYear = user.BirthYear
+                BirthYear = user.BirthYear,
+                Image = user.Image
+                
             };
         }
 
@@ -72,7 +79,11 @@ namespace Snackis.Areas.Identity.Pages.Account.Manage
             {
                 return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
             }
-
+            if (user.Image != null)
+            {
+                string imageBase64Data = Convert.ToBase64String(user.Image);
+                ImageURL = string.Format($"data:image/jpg;base64, {imageBase64Data}");
+            }
             await LoadAsync(user);
             return Page();
         }
@@ -109,6 +120,17 @@ namespace Snackis.Areas.Identity.Pages.Account.Manage
             if (Input.BirthYear != user.BirthYear)
             {
                 user.BirthYear = Input.BirthYear;
+            }
+            if (Request.Form.Files.Count >0 )
+            {
+                var file=Request.Form.Files[0];
+                Byte[] image;
+                using (MemoryStream ms = new())
+                {
+                    await file.CopyToAsync(ms);
+                    image = ms.ToArray();
+                }
+                    user.Image = image;
             }
             await _userManager.UpdateAsync(user);
             // <-- Ny kod

@@ -34,6 +34,9 @@ namespace Snackis.Pages
         [BindProperty]
         public Post OriginPost { get; set; }
 
+        [BindProperty(SupportsGet = true)]
+        public string ImageURL { get; set; }
+
         public ThreadViewModel(IPostRepository postRepository, UserManager<SnackisUser> userManager, PostFormService postFormService)
         {
             _PostFormService = postFormService;
@@ -46,7 +49,16 @@ namespace Snackis.Pages
             AllPosts = await _postRepository.GetPosts();
             OriginPost = AllPosts.FirstOrDefault(p => p.Id.ToString() == Request.Cookies["MyThreadCookie"]);
             Category = OriginPost.Category;
-           
+            if  (MyUser != null && MyUser.Image != null )
+            {
+                string imageBase64Data = Convert.ToBase64String(MyUser.Image);
+                ImageURL = string.Format($"data:image/jpg;base64, {imageBase64Data}");
+            }
+            else
+            {
+                ImageURL = "https://bootdey.com/img/Content/avatar/avatar1.png";
+            }
+
             return Page();
         }
         public async Task<IActionResult> OnPostAddPostAsync()

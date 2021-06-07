@@ -21,5 +21,6 @@ namespace Snackis.Models
         public int DisLikes { get; set; }
         public int Replyes { get; set; }
         public int Threads { get; set; }
+        public string ImageURL { get; set; }
     }
 }
