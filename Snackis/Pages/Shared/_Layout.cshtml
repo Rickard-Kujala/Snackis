@@ -32,22 +32,41 @@
             </div>
         </nav>
     </header>
-                <div class="container">
-                    <main role="main" class="pb-3">
-                        @RenderBody()
-                    </main>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-2 sidebar navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+                <div>
+                    <nav>
+                        <a href="javascript:void(0)" class="nav-link nav-link-faded has-icon active">All Threads</a>
+                        <a href="javascript:void(0)" class="nav-link nav-link-faded has-icon">Popular this week</a>
+                        <a href="javascript:void(0)" class="nav-link nav-link-faded has-icon">Popular all time</a>
+                        <a href="javascript:void(0)" class="nav-link nav-link-faded has-icon">Solved</a>
+                        <a href="javascript:void(0)" class="nav-link nav-link-faded has-icon">Unsolved</a>
+                        <a href="javascript:void(0)" class="nav-link nav-link-faded has-icon">No replies yet</a>
+
+                    </nav>
                 </div>
+            </div>
+            <div class="col-10">
+                <main role="main" class="pb-3">
+                    @RenderBody()
+                </main>
+            </div>
+        </div>
+    </div>
+    <footer class="border-top footer text-muted">
+        <div class="container">
+            &copy; 2021 - Snackis - <a asp-area="" asp-page="/Privacy">Privacy</a>
+        </div>
+    </footer>
 
-                <footer class="border-top footer text-muted">
-                    <div class="container">
-                        &copy; 2021 - Snackis - <a asp-area="" asp-page="/Privacy">Privacy</a>
-                    </div>
-                </footer>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
 
-                <script src="~/lib/jquery/dist/jquery.min.js"></script>
-                <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-                <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
 
-                @await RenderSectionAsync("Scripts", required: false)
+
+
 </body>
 </html>

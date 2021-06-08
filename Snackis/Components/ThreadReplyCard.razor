@@ -1,52 +1,68 @@
-﻿@*@inject Repositories.IPostRepository _postRepository;
-<div class="modal fade" id="postModal" tabindex="-1" role="dialog" aria-labelledby="threadModalLabel" aria-hidden="true">
+﻿@inject Repositories.IPostRepository _postRepository;
+@using Snackis.Areas.Identity.Data
+@using Snackis.Models
+<!-- New Thread Modal -->
+<button class="btn btn-primary float-right" type="button" data-toggle="modal" data-target="#MyModal">
+    <i class="bi bi-reply"></i>
+    Starta en tråd i @Category
+</button>
+<div class="modal fade" id="MyModal" tabindex="-1" role="dialog" aria-labelledby="threadModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
-            @if (Model.MyUser != null)
+            @if (MyUser != null)
             {
-                <form asp-page-handler="addpost">
-                    <input type="hidden" asp-for="PostModel.UserId" value="@Model.MyUser.Id" />
-                    <input type="hidden" asp-for="PostModel.Nickname" value="@Model.MyUser.NickName" />
-                    <input type="hidden" asp-for="PostModel.Category" value="@Model.Category" />
-                    <input type="hidden" asp-for="PostModel.ImageURL" value="@Model.ImageURL" />
-                    <input type="hidden" asp-for="PostModel.PostParent" value="@post.Id.ToString()" />
-                    <div class="modal-header d-flex align-items-center bg-primary text-white">
-                        <h6 class="modal-title mb-0" id="threadModalLabel">Svara i tråden</h6>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Stäng">
-                            <span aria-hidden="true">×</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="form-group">
-                            <label for="threadTitle">Skriv ditt svar här</label>
-                            <input type="text" asp-for="PostModel.Text" class="form-control" id="threadTitle" placeholder="Skriv ditt svar här" autofocus="" />
-                        </div>
-                        <textarea class="form-control summernote" style="display: none;"></textarea>
-                        <div class="custom-file form-control-sm mt-3" style="max-width: 300px;">
-                            <input type="file" class="custom-file-input" id="customFile" multiple="" />
-                            <label class="custom-file-label" for="customFile">Attachment</label>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-light" data-dismiss="modal">Avbryt</button>
-                        <button type="submit" class="btn btn-primary">Skicka</button>
-                    </div>
-                </form>
+                @if (PostModel != null)
+                {
+
+              <input type="hidden" asp-for="@PostModel.UserId" value="@MyUser.Id" />
+              <input type="hidden" asp-for="@PostModel.Nickname" value="@MyUser.NickName" />
+              <input type="hidden" asp-for="@PostModel.Category" value="@Category" />
+              <input type="hidden" asp-for="@PostModel.ImageURL" value="@ImageURL" />
+              <input type="hidden" asp-for="@PostModel.PostParent" value="@ParentPost" />
+                }
+              <div class="modal-header d-flex align-items-center bg-primary text-white">
+                  <h6 class="modal-title mb-0" id="threadModalLabel">Svara i tråden</h6>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Stäng">
+                      <span aria-hidden="true">×</span>
+                  </button>
+              </div>
+              <div class="modal-body">
+                  <div class="form-group">
+                      <label for="threadTitle">Skriv ditt svar här</label>
+                      <input type="text" asp-for="PostModel.Text" class="form-control" id="threadTitle" placeholder="Skriv ditt svar här" autofocus="" />
+                  </div>
+                  <textarea class="form-control summernote" style="display: none;"></textarea>
+                  <div class="custom-file form-control-sm mt-3" style="max-width: 300px;">
+                      <input type="file" class="custom-file-input" id="customFile" multiple="" />
+                      <label class="custom-file-label" for="customFile">Attachment</label>
+                  </div>
+              </div>
+              <div class="modal-footer">
+                  <button type="button" class="btn btn-light" data-dismiss="modal">Avbryt</button>
+                  <button type="button"  @onclick="@SavePost()" class="btn btn-primary">Skicka</button>
+              </div>
             }
         </div>
     </div>
 </div>
+
+
 @inject Models.PostFormService PostFormService;
 @code {
     [Parameter]
-    public SnackisUser AllPosts { get; set; }
+    public SnackisUser? MyUser { get; set; }
 
     [Parameter]
-    public Models.Post post { get; set; }
+    public string? Category { get; set; }
+
     [Parameter]
-    public Models.Post OriginPost { get; set; }
+    public string? ImageURL { get; set; }
+
     [Parameter]
-    public bool IsReply { get; set; }
+    public string? ParentPost { get; set; }
+
+    [Parameter]
+    public Post? PostModel { get; set; }
 
 
     protected override void OnInitialized()
@@ -54,11 +70,23 @@
         base.OnInitialized();
 
 
+        //if (PostFormService.Form != null)
+        //{
 
-        var data = PostFormService.Form?["data"];
+        //var data = PostFormService.Form.Keys.ToList();
+        //Console.WriteLine(data);
+        //}
 
 
-        Console.WriteLine(data);
 
     }
-}*@
+    public async Task SavePost()
+    {
+        if (PostModel != null)
+        {
+            await _postRepository.AddPostAsync(PostModel);
+
+        }
+
+    }
+}

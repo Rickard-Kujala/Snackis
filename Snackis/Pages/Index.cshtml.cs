@@ -49,7 +49,7 @@ namespace Snackis.Pages
         {
             MyUser = await _userManager.GetUserAsync(User);
             AdminExists = await _roleManager.RoleExistsAsync("Admin");
-            AllPosts = await GetPosts();
+            AllPosts = await _postRepository.GetPosts();
             var nr = AllPosts.Select(p => p.Id).Count();
             Categories = await _postRepository.GetCategories();
 
@@ -82,19 +82,5 @@ namespace Snackis.Pages
             return Page();
         }
         
-        public async Task<List<Post>> GetPosts()
-        {
-            var client = new HttpClient();
-            Task<string> getCatagoryStringTask = client.GetStringAsync($"https://snackis-api.azurewebsites.net/api/post");
-            string categoryString = await getCatagoryStringTask;
-            return JsonConvert.DeserializeObject<List<Post>>(categoryString);
-        }
-        public async Task<List<Post>> GetCategories()
-        {
-            var client = new HttpClient();
-            Task<string> getCatagoryStringTask = client.GetStringAsync($"https://snackis-api.azurewebsites.net/api/category");
-            string categoryString = await getCatagoryStringTask;
-            return JsonConvert.DeserializeObject<List<Post>>(categoryString);
-        }
     }
 }

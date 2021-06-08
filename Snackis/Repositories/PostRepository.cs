@@ -29,13 +29,11 @@ namespace Snackis.Repositories
 
         public async Task<Post> GetPostsById(Guid Id)
         {
-            //var Client = new HttpClient();
             return await Client.GetFromJsonAsync<Post>(_configuration["SnackisAPIPost"] + "/" + $"{Id.ToString()}");
         }
         public async Task<List<string>> GetCategories()
         {
-            //var Client = new HttpClient();
-            var allPosts = await Client.GetFromJsonAsync<List<Post>>(_configuration["SnackisAPIPost"]);
+            var allPosts = await GetPosts(); 
             return allPosts.Select(p => p.Category).Distinct().ToList();
         }
         public async Task<HttpResponseMessage> UpdatePost(Guid id, Post updatedPost)

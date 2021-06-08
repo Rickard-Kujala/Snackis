@@ -1,0 +1,16 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using Snackis.Areas.Identity.Data
+@inject SignInManager<SnackisUser> SignInManager
+@inject UserManager<SnackisUser> UserManager
+@model Models.AdminRegisterModel
+
+<form>
+    <div class="form-group">
+        <label asp-for="Email"></label>
+        <input asp-for="Email" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label asp-for="Password"></label>
+        <input asp-for="Password" class="form-control" />
+    </div>
+</form>
