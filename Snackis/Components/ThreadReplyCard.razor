@@ -14,7 +14,7 @@
                 @if (PostModel != null)
                 {
 
-              <input type="hidden" asp-for="@PostModel.UserId" value="@MyUser.Id" />
+              <input type="hidden" aps-for="@PostModel.UserId" value="@MyUser.Id" />
               <input type="hidden" asp-for="@PostModel.Nickname" value="@MyUser.NickName" />
               <input type="hidden" asp-for="@PostModel.Category" value="@Category" />
               <input type="hidden" asp-for="@PostModel.ImageURL" value="@ImageURL" />
@@ -29,7 +29,7 @@
               <div class="modal-body">
                   <div class="form-group">
                       <label for="threadTitle">Skriv ditt svar här</label>
-                      <input type="text" asp-for="PostModel.Text" class="form-control" id="threadTitle" placeholder="Skriv ditt svar här" autofocus="" />
+                      <input type="text" asp-for="@PostModel.Text" class="form-control" id="threadTitle" placeholder="Skriv ditt svar här" autofocus="" />
                   </div>
                   <textarea class="form-control summernote" style="display: none;"></textarea>
                   <div class="custom-file form-control-sm mt-3" style="max-width: 300px;">
@@ -39,7 +39,7 @@
               </div>
               <div class="modal-footer">
                   <button type="button" class="btn btn-light" data-dismiss="modal">Avbryt</button>
-                  <button type="button"  @onclick="@SavePost()" class="btn btn-primary">Skicka</button>
+                  <button onclick="@SavePost()" class="btn btn-primary">Skicka</button>
               </div>
             }
         </div>
@@ -60,16 +60,16 @@
 
     [Parameter]
     public string? ParentPost { get; set; }
-
     [Parameter]
-    public Post? PostModel { get; set; }
+    public Post PostModel { get; set; }
+
 
 
     protected override void OnInitialized()
     {
         base.OnInitialized();
 
-
+        var PostModel = new Post();
         //if (PostFormService.Form != null)
         //{
 
@@ -82,11 +82,11 @@
     }
     public async Task SavePost()
     {
-        if (PostModel != null)
-        {
-            await _postRepository.AddPostAsync(PostModel);
+        //if (PostModel != null)
+        //{
+        //    await _postRepository.AddPostAsync(PostModel);
 
-        }
+        //}
 
     }
 }

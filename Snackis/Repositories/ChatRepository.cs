@@ -12,7 +12,7 @@ namespace Snackis.Repositories
     public class ChatRepository : IChatRepository
     {
         private readonly IConfiguration _configuration;
-
+        
         public HttpClient Client { get; set; } = new HttpClient();
         public ChatRepository(IConfiguration configuration)
         {
@@ -26,8 +26,10 @@ namespace Snackis.Repositories
         {
             var newChat = new Chat
             {
-                ReceverId = chatModel.ReceverId,
+                Id = Guid.NewGuid(),
+                ReceiverId = chatModel.ReceiverId,
                 SenderId = chatModel.SenderId,
+                Text=chatModel.Text,
                 GroupMembers = chatModel.GroupMembers,
                 GroupAdminId = chatModel.GroupAdminId
             };

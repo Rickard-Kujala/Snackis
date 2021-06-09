@@ -21,6 +21,8 @@ namespace Snackis.Pages
     {
         private readonly IPostRepository _postRepository;
         private readonly UserManager<SnackisUser> _userManager;
+        private readonly IChatRepository _chatRepository;
+
         [BindProperty]
         public bool IsReply { get; set; }
         private PostFormService _PostFormService { get; }
@@ -28,6 +30,8 @@ namespace Snackis.Pages
         public SnackisUser MyUser { get; set; }
         [BindProperty]
         public Post PostModel { get; set; }
+        [BindProperty]
+        public Chat ChatModel { get; set; }
         public string Category { get; set; }
         [BindProperty]
         public List<Post> AllPosts { get; set; }
@@ -36,15 +40,22 @@ namespace Snackis.Pages
 
         [BindProperty(SupportsGet = true)]
         public string ImageURL { get; set; }
+        [BindProperty]
+        public List<SnackisUser > Users { get; set; }
 
-        public ThreadViewModel(IPostRepository postRepository, UserManager<SnackisUser> userManager, PostFormService postFormService)
+        public ThreadViewModel(IPostRepository postRepository,
+            UserManager<SnackisUser> userManager,
+            PostFormService postFormService,
+            IChatRepository chatRepository)
         {
             _PostFormService = postFormService;
+            _chatRepository = chatRepository;
             _postRepository = postRepository;
             _userManager = userManager;
         }
         public async Task<IActionResult> OnGetAsync()
         {
+            Users = _userManager.Users.ToList();
             MyUser = await _userManager.GetUserAsync(User);
             AllPosts = await _postRepository.GetPosts();
             OriginPost = AllPosts.FirstOrDefault(p => p.Id.ToString() == Request.Cookies["MyThreadCookie"]);
@@ -82,6 +93,16 @@ namespace Snackis.Pages
                 //};
                 //await client.PostAsJsonAsync("https://snackis-api.azurewebsites.net/api/post", post);
                 await _postRepository.AddPostAsync(PostModel);
+            }
+            return RedirectToPage("ThreadView");
+        }
+        public async Task<IActionResult> OnPostAddChatAsync()
+        {
+           
+
+            if (ModelState.IsValid)
+            {
+                var result=await _chatRepository.PostAsync(ChatModel);
             }
             return RedirectToPage("ThreadView");
         }

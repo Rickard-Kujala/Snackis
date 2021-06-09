@@ -29,7 +29,7 @@
                                 <div class="card mb-2">
                                     <div class="card-body p-2 p-sm-3">
                                         <div class="media forum-item">
-                                            <a href="#" data-toggle="collapse" data-target=".forum-content"><img src="@Model.OriginPost.ImageURL" class="mr-3 rounded-circle" width="50" alt="User" /></a>
+                                            <a href="#" data-toggle="collapse" data-target=".forum-content"><img src="@Model.Users.FirstOrDefault(u=>u.Id  == Model.OriginPost.Id.ToString()).Image " class="mr-3 rounded-circle" width="50" alt="User" /></a>
                                             <div class="media-body">
                                                 <h6><a href="#" data-toggle="collapse" data-target=".forum-content" class="text-body">@Model.OriginPost.Title</a></h6>
                                                 <p class="text-secondary">
@@ -83,11 +83,44 @@
                                             </div>
                                         </div>
                                     </div>
+                                    <div class="modal fade" id="chatmodal-@post.Id" tabindex="-1" role="dialog" aria-labelledby="threadModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog modal-lg" role="document">
+                                            <div class="modal-content">
+                                                @if (Model.MyUser != null)
+                                                {
+                                                    <form asp-page-handler="addchat">
+                                                        <input type="hidden" asp-for="ChatModel.SenderId" value="@Model.MyUser.Id" />
+                                                        <input type="hidden" asp-for="ChatModel.ReceiverId" value="@post.UserId" />
+                                                        <div class="modal-header d-flex align-items-center bg-primary text-white">
+                                                            <h6 class="modal-title mb-0" id="threadModalLabel">Svara i tråden</h6>
+                                                            <button type="submit" class="close" data-dismiss="modal" aria-label="Stäng">
+                                                                <span aria-hidden="true">×</span>
+                                                            </button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <div class="form-group">
+                                                                <label for="threadTitle">Skriv ditt svar här</label>
+                                                                <input type="text" asp-for="ChatModel.Text" class="form-control" id="threadTitle" placeholder="Skriv ditt svar här" autofocus="" />
+                                                            </div>
+                                                            <textarea class="form-control summernote" style="display: none;"></textarea>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-light" data-dismiss="modal">Avbryt</button>
+                                                            <button type="submit" class="btn btn-primary">Skicka</button>
+                                                        </div>
+                                                    </form>
+                                                }
+                                            </div>
+                                        </div>
+                                    </div>
                                     @*<component type="typeof(Components.ThreadReplyCard)" render-mode="Static" param-allposts="@Model.AllPosts" param-originpost="@Model.OriginPost" param-post="@post" param-isreply="@Model.IsReply"/>*@
                                     <div class="card mb-2">
                                         <div class="card-body p-2 p-sm-3">
                                             <div class="media forum-item">
                                                 <a href="#" data-toggle="collapse" data-target=".forum-content"><img src="@post.ImageURL" class="mr-3 rounded-circle" width="50" height="50" alt="User" /></a>
+                                                <button class="btn btn-primary float-right" type="button" data-toggle="modal" data-target="#chatmodal-@post.Id">
+                                                    privat meddelande
+                                                </button>
                                                 <div class="media-body text-break">
                                                     <h6><a href="#" data-toggle="collapse" data-target=".forum-content" class="text-body">RE: @Model.AllPosts.Single(p => p.Id.ToString() == post.PostParent).Title</a></h6>
                                                     <button class="btn btn-primary float-right" type="button" data-toggle="modal" data-target="#modal-@post.Id">

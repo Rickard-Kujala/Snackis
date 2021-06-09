@@ -47,10 +47,10 @@ namespace Snackis.Pages
 
         public async Task<IActionResult> OnGetAsync()
         {
+
             MyUser = await _userManager.GetUserAsync(User);
             AdminExists = await _roleManager.RoleExistsAsync("Admin");
             AllPosts = await _postRepository.GetPosts();
-            var nr = AllPosts.Select(p => p.Id).Count();
             Categories = await _postRepository.GetCategories();
 
             if (Category!=null)

@@ -18,3 +18,10 @@ function HideFunction(id, buttonid) {
 
     }
 }
+$(document).ready(function () {
+
+    $('#sidebarCollapse').on('click', function () {
+        $('#sidebar').toggleClass('active');
+    });
+
+});

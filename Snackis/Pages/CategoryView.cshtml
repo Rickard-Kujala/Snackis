@@ -7,7 +7,7 @@
         @if (Model.MyUser != null)
         {
 
-            @*<form asp-page-handler="addpost">
+            <form asp-page-handler="addpost">
                 <input type="hidden" asp-for="PostModel.UserId" value="@Model.MyUser.Id.ToString()" />
                 <input type="hidden" asp-for="PostModel.Nickname" value="@Model.MyUser.NickName" />
                 <input type="hidden" asp-for="PostModel.Category" value="@Model.Category" />
@@ -18,8 +18,8 @@
                 <div class="text-center"> <label asp-for="PostModel.Text">Starta ny tråd i @Model.Category</label></div>
                 <div class="text-center"><textarea asp-for="PostModel.Text"></textarea></div>
                 <div class="text-center"><button id="submit" type="submit">Skapa! </button></div>
-            </form>*@
-            <component type="typeof(Components.ThreadReplyCard)" render-mode="Static" param-myuser="@Model.MyUser" param-category="@Model.Category" param-imageurl="null" param-parentpost="null" param-postmodel="@Model.PostModel" />
+            </form>
+            @*<component type="typeof(Components.ThreadReplyCard)" render-mode="Static" param-myuser="@Model.MyUser" param-category="@Model.Category" param-imageurl="null" param-parentpost="null" param-postmodel="@Model.PostModel" />*@
 
         }
     </div>
