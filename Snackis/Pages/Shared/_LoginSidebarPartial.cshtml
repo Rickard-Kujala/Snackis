@@ -2,15 +2,67 @@
 @using Snackis.Areas.Identity.Data
 @inject SignInManager<SnackisUser> SignInManager
 @inject UserManager<SnackisUser> UserManager
-@model Models.AdminRegisterModel
+@inject Repositories.IUserRepository _userRepository
+@{
+    var Model = _userRepository.GetModel();
+    var user = await UserManager.GetUserAsync(User);
+}
+@*<form asp-page-handler="login">
+        <div class="form-group"
+            <label asp-for="@loginModel.Email"></label>
+            <input asp-for="@loginModel.Email" class="form-control" />
+        </div>
+        <div class="form-group">
+            <label asp-for="@loginModel.Password"></label>
+            <input asp-for="@loginModel.Password" class="form-control" />
+        </div>
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary">Logga in</button>
+        </div>
+    </form>*@
+@if (SignInManager.IsSignedIn(User))
+{
+    <div class="d-flex justify-content-center">
+        <a id="manage" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage"><img src="@("data:image/jpg;base64, " + Convert.ToBase64String((user.Image)))" class="rounded-circle" width="70" height="70" alt="User" /></a>
+    </div>
+    <div class="d-flex justify-content-center">
+        <p>Inloggad som @user.NickName</p>
+    </div>
+    <form id="logoutForm" class="form-inline d-flex justify-content-center" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Page("/Index", new { area = "" })">
+        <button id="logout" type="submit" class=" nav-link btn btn-link text-white">Logga ut</button>
+    </form>
+}
+else
+{
 
-<form>
-    <div class="form-group">
-        <label asp-for="Email"></label>
-        <input asp-for="Email" class="form-control" />
-    </div>
-    <div class="form-group">
-        <label asp-for="Password"></label>
-        <input asp-for="Password" class="form-control" />
-    </div>
-</form>
+    <form method="post" asp-area="Identity" asp-page="/Account/Login">
+        <div asp-validation-summary="All" class="text-danger"></div>
+        <div class="form-group">
+            <label asp-for="@Model.Email"></label>
+            <input asp-for="@Model.Email" class="form-control" />
+            <span asp-validation-for="@Model.Email" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="@Model.Password"></label>
+            <input asp-for="@Model.Password" class="form-control" />
+            <span asp-validation-for="@Model.Password" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <div class="checkbox">
+                <label asp-for="@Model.RememberMe">
+                    <input asp-for="@Model.RememberMe" />
+                    @*@Html.DisplayNameFor(loginModel.RememberMe)*@
+                </label>
+            </div>
+        </div>
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary">Logga in</button>
+        </div>
+    </form>
+    <ul class="list-unstyled components ">
+        <li >
+            <a class="nav-link " id="register" asp-area="Identity" asp-page="/Account/Register">Skapa konto</a>
+        </li>
+
+     </ul>
+  }

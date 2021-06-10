@@ -81,11 +81,15 @@ namespace Snackis.Repositories
                     PostParent = postModel.PostParent,
                     UserId = postModel.UserId,
                     Nickname = postModel.Nickname,
-                    ImageURL=postModel.ImageURL
 
                 };
                 return await client.PostAsJsonAsync(_configuration["SnackisAPIPost"], post);
             }
         }
+        public async Task<HttpResponseMessage> DeletePostById(Guid id)
+        {
+            return await Client.DeleteAsync($"https://snackis-api.azurewebsites.net/api/category/" + id);
+        }
+
     }
 }

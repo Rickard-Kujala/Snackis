@@ -18,21 +18,49 @@
         </div>
         <div class="col-4">
             <h4>Kategorier</h4>
-            @foreach (var category in Model.Categories.Where(p => p.Text == null))
-            {
-                <p>
-                    <a href="?deletecategoryid=@category.Id">@category.Category</a>
-                </p>
-
-            }
             <form class="rounded" asp-page-handler="addcategory">
-                <div>
+                <div class="mb-1">
                     <label asp-for="CategoryModel.Name">Skapa ny</label>
                     <input asp-for="CategoryModel.Name" />
                     <button id="submit" type="submit">Spara kategori</button>
                 </div>
             </form>
+            <div class="dropdown show">
+                <a class="btn btn-info" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Visa alla
+                </a>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                    @foreach (var category in Model.AllPosts.Where(p => p.Text == null))
+                    {
+                        <p class="pl-1">@category.Category<a class="text-danger float-right pr-1" href="?deletecategoryid=@category.Id">ta bort</a></p>
+                    }
+
+                </div>
+            </div>
         </div>
+        <div class="col-4">
+            <h4>Forum</h4>
+            <form class="rounded" asp-page-handler="addcategory">
+                <div>
+                    <label asp-for="ForumName">Skapa ny</label>
+                    <input asp-for="ForumName" />
+                    <button id="submit" type="submit">Skapa forum</button>
+                </div>
+            </form>
+            <div class="dropdown show">
+                <a class="btn btn-info" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Visa alla
+                </a>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                    @foreach (var forum in Model.AllPosts.Where(p => p.Heading != null))
+                    {
+                        <p class="pl-1">@forum.Heading<a class="text-danger float-right pr-1" href="?deleteforumoryid=@forum.Id">ta bort</a></p>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
         <div class="row col-4">
             <h4>Amälda inlägg</h4>
             @foreach (var post in Model.AllPosts.Where(p => p.AbuseReport == true))
@@ -40,6 +68,8 @@
                 <button class="btn btn-default" onclick="HideFunction('@post.Id', 'message @post')">
                     <p class="text-danger">@post.Nickname @post.DateTime</p>
                 </button>
+                <a class="text-danger" href="?deletepostid=@post.Id">ta bort</a>
+                
                 <div id="@post.Id" style="display: none" class="card-body p-2 p-sm-3">
                     <div class="media forum-item">
                         <a href="#" data-toggle="collapse" data-target=".forum-content"><img src="https://bootdey.com/img/Content/avatar/avatar1.png" class="mr-3 rounded-circle" width="50" alt="User" /></a>

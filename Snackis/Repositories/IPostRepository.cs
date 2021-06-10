@@ -14,5 +14,6 @@ namespace Snackis.Repositories
         Task<HttpResponseMessage> UpdatePost(Guid id, Post updatedPost);
         Task<bool> OnPostReactAsync(Guid id, string value);
         Task<HttpResponseMessage> AddPostAsync(Post postModel);
+        Task<HttpResponseMessage> DeletePostById(Guid id);
     }
 }

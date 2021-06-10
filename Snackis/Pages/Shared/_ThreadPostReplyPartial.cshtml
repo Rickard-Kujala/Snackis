@@ -1,5 +1,9 @@
 ﻿@using Snackis.Pages
+@using Snackis.Models
 @model Models.Post
+@{ 
+    var AllPosts = (List<Post>)ViewData["AllPosts"];
+}
 
     <form asp- asp-page-handler="react" method="post">
         <button class="btn btn-default">
@@ -12,12 +16,12 @@
         <button class="btn btn-default">
             <i class=" col-1 bi bi-hand-thumbs-down">@Model.DisLikes</i>
         </button>
-        <input type="hidden" name="id" value="@Model" />
+        <input type="hidden" name="id" value="@Model.Id" />
         <input type="hidden" name="value" value="Dislikes" />
     </form>
     <form asp-page-handler="react" method="post">
         <button class="btn btn-default">
-            <i class="bi bi-flag">@Model.Replyes</i>
+            <i class="bi bi-flag"></i>
         </button>
         <input type="hidden" name="id" value="@Model.Id" />
         <input type="hidden" name="value" value="Abuse" />

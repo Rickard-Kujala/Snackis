@@ -1,20 +1,30 @@
-﻿@inject Repositories.IPostRepository _postRepository;
-@using Snackis.Areas.Identity.Data
+﻿@using Snackis.Pages
 @using Snackis.Models
-<!-- New Thread Modal -->
+@*@model Models.Post*@
+@using Microsoft.AspNetCore.Identity
+@using Snackis.Areas.Identity.Data
+@inject UserManager<SnackisUser> userManager
+@{ 
+
+    var AllPosts = (List<Post>)ViewData["AllPosts"];
+    var PostModel = (Post)ViewData["PostModel"];
+    var MyUser = await userManager.GetUserAsync(User);
+
+ }
+
 <button class="btn btn-primary float-right" type="button" data-toggle="modal" data-target="#MyModal">
     <i class="bi bi-reply"></i>
-    Starta en tråd i @Category
+    Starta en tråd i @ViewData["Category"]
 </button>
 <div class="modal fade" id="MyModal" tabindex="-1" role="dialog" aria-labelledby="threadModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             @if (MyUser != null)
             {
-                <input type="hidden" aps-for="@PostModel.UserId" value="@MyUser.Id" />
+            <form asp-page-handler="addpost">
+                <input type="hidden" asp-for="@PostModel.UserId" value="@MyUser.Id" />
                 <input type="hidden" asp-for="@PostModel.Nickname" value="@MyUser.NickName" />
-                <input type="hidden" asp-for="@PostModel.Category" value="@Category" />
-                <input type="hidden" asp-for="@PostModel.PostParent" value="@ParentPost" />
+                <input type="hidden" asp-for="@PostModel.Category" value="@ViewData["Category"]" />
                 <div class="modal-header d-flex align-items-center bg-primary text-white">
                     <h6 class="modal-title mb-0" id="threadModalLabel">Svara i tråden</h6>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Stäng">
@@ -23,7 +33,11 @@
                 </div>
                 <div class="modal-body">
                     <div class="form-group">
-                        <label for="threadTitle">Skriv ditt svar här</label>
+                        <label for="threadTitle">Titel..</label>
+                        <input type="text" asp-for="@PostModel.Title" class="form-control" id="threadTitle" placeholder="Skriv ditt svar här" autofocus="" />
+                    </div>
+                    <div class="form-group">
+                        <label for="threadTitle">Text..</label>
                         <input type="text" asp-for="@PostModel.Text" class="form-control" id="threadTitle" placeholder="Skriv ditt svar här" autofocus="" />
                     </div>
                     <textarea class="form-control summernote" style="display: none;"></textarea>
@@ -34,53 +48,10 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-light" data-dismiss="modal">Avbryt</button>
-                    <button @onclick="SavePost" class="btn btn-primary">Skicka</button>
+                    <button type="submit" class="btn btn-primary">Skicka</button>
                 </div>
+            </form>  
             }
         </div>
     </div>
 </div>
-
-
-@inject Models.PostFormService PostFormService;
-@code {
-    [Parameter]
-    public SnackisUser? MyUser { get; set; }
-
-    [Parameter]
-    public string? Category { get; set; }
-
-    [Parameter]
-    public string? ImageURL { get; set; }
-
-    [Parameter]
-    public string? ParentPost { get; set; }
-
-    public Post PostModel { get; set; } = new();
-
-
-
-    //protected override void OnInitialized()
-    //{
-    //    base.OnInitialized();
-
-    //    PostModel = new Post();
-    //    //if (PostFormService.Form != null)
-    //    //{
-
-    //    //var data = PostFormService.Form.Keys.ToList();
-    //    //Console.WriteLine(data);
-    //    //}
-
-
-
-    //}
-    private void SavePost()
-    {
-
-        PostModel.UserId = MyUser.Id;
-        _postRepository.AddPostAsync(PostModel);
-
-
-    }
-}

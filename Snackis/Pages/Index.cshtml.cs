@@ -29,18 +29,25 @@ namespace Snackis.Pages
         public List<string> Categories { get; set; }
         [BindProperty(SupportsGet =true)]
         public string Category { get; set; }
+        [BindProperty]
+        public LoginModel Input { get; set; }
+
+
         private readonly UserManager<SnackisUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IPostRepository _postRepository;
+        private readonly Microsoft.AspNetCore.Identity.SignInManager<SnackisUser> _signInManager;
 
         public IndexModel(ILogger<IndexModel> logger, UserManager<SnackisUser> userManager,
             RoleManager<IdentityRole> roleManager,
-            IPostRepository postRepository)
+            IPostRepository postRepository,
+            SignInManager<SnackisUser> signInManager)
         {
             _logger = logger;
             _userManager = userManager;
             _roleManager = roleManager;
             _postRepository = postRepository;
+            _signInManager = signInManager;
         }
 
         public UserManager<SnackisUser> UserManager { get; }
@@ -52,12 +59,17 @@ namespace Snackis.Pages
             AdminExists = await _roleManager.RoleExistsAsync("Admin");
             AllPosts = await _postRepository.GetPosts();
             Categories = await _postRepository.GetCategories();
+            ViewData["LoginModel"] = Input;
 
             if (Category!=null)
             {
                 Response.Cookies.Append("MyCategoryCookie", $"{Category}");
                 return RedirectToPage("CategoryView");
             }
+            return Page();
+        }
+        public IActionResult OnPost()
+        {
             return Page();
         }
         public async Task<IActionResult> OnPostRegisterAdminAsync()
@@ -81,6 +93,42 @@ namespace Snackis.Pages
             }
             return Page();
         }
-        
+        public async Task<IActionResult> OnPostLoginAsync(string returnUrl = null)
+        {
+            returnUrl ??= Url.Content("~/");
+
+            //ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
+
+            if (ModelState.IsValid)
+            {
+                // This doesn't count login failures towards account lockout
+                // To enable password failures to trigger account lockout, set lockoutOnFailure: true
+                var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: false);
+                if (result.Succeeded)
+                {
+                    _logger.LogInformation("User logged in.");
+                    return LocalRedirect(returnUrl);
+                }
+                if (result.RequiresTwoFactor)
+                {
+                    return RedirectToPage("./LoginWith2fa", new { ReturnUrl = returnUrl, RememberMe = Input.RememberMe });
+                }
+                if (result.IsLockedOut)
+                {
+                    _logger.LogWarning("User account locked out.");
+                    return RedirectToPage("./Lockout");
+                }
+                else
+                {
+                    ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+                    return Page();
+                }
+            }
+
+            // If we got this far, something failed, redisplay form
+            return Page();
+        }
     }
+
 }
+

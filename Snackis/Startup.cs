@@ -19,6 +19,7 @@ namespace Snackis
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+            
         }
 
         public IConfiguration Configuration { get; }
@@ -26,7 +27,9 @@ namespace Snackis
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
+            services.AddRazorPages()
+                .AddRazorRuntimeCompilation();
+            services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IChatRepository, ChatRepository>();
             services.AddScoped<PostFormService>();
             services.AddScoped<IPostRepository, PostRepository>();
@@ -49,6 +52,7 @@ namespace Snackis
         {
             if (env.IsDevelopment())
             {
+                app.UseBrowserLink();
                 app.UseDeveloperExceptionPage();
             }
             else

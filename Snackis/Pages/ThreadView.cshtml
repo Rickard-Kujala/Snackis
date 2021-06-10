@@ -1,5 +1,8 @@
 ﻿@page
 @model Snackis.Pages.ThreadViewModel
+@using Microsoft.AspNetCore.Identity
+@using Snackis.Areas.Identity.Data
+@inject UserManager<SnackisUser> userManager
 @{
 }
 <div class="main-body p-0">
@@ -29,7 +32,7 @@
                                 <div class="card mb-2">
                                     <div class="card-body p-2 p-sm-3">
                                         <div class="media forum-item">
-                                            <a href="#" data-toggle="collapse" data-target=".forum-content"><img src="@Model.Users.FirstOrDefault(u=>u.Id  == Model.OriginPost.Id.ToString()).Image " class="mr-3 rounded-circle" width="50" alt="User" /></a>
+                                            <a href="#" data-toggle="collapse" data-target=".forum-content"><img src="@("data:image/jpg;base64, " + Convert.ToBase64String((await userManager.FindByIdAsync(Model.OriginPost.UserId)).Image))" class="mr-3 rounded-circle" width="50" height="50" alt="User" /></a>
                                             <div class="media-body">
                                                 <h6><a href="#" data-toggle="collapse" data-target=".forum-content" class="text-body">@Model.OriginPost.Title</a></h6>
                                                 <p class="text-secondary">
@@ -55,7 +58,6 @@
                                                         <input type="hidden" asp-for="PostModel.UserId" value="@Model.MyUser.Id" />
                                                         <input type="hidden" asp-for="PostModel.Nickname" value="@Model.MyUser.NickName" />
                                                         <input type="hidden" asp-for="PostModel.Category" value="@Model.Category" />
-                                                        <input type="hidden" asp-for="PostModel.ImageURL" value="@Model.ImageURL" />
                                                         <input type="text" name="PostModel.PostParent" value="@post.Id.ToString()" />
                                                         <div class="modal-header d-flex align-items-center bg-primary text-white">
                                                             <h6 class="modal-title mb-0" id="threadModalLabel">Svara i tråden</h6>
@@ -117,10 +119,7 @@
                                     <div class="card mb-2">
                                         <div class="card-body p-2 p-sm-3">
                                             <div class="media forum-item">
-                                                <a href="#" data-toggle="collapse" data-target=".forum-content"><img src="@post.ImageURL" class="mr-3 rounded-circle" width="50" height="50" alt="User" /></a>
-                                                <button class="btn btn-primary float-right" type="button" data-toggle="modal" data-target="#chatmodal-@post.Id">
-                                                    privat meddelande
-                                                </button>
+                                                <a href="#" data-toggle="collapse" data-target=".forum-content"><img src="@("data:image/jpg;base64, " + Convert.ToBase64String((await userManager.FindByIdAsync(post.UserId)).Image))" class="mr-3 rounded-circle" width="50" height="50" alt="User" /></a>
                                                 <div class="media-body text-break">
                                                     <h6><a href="#" data-toggle="collapse" data-target=".forum-content" class="text-body">RE: @Model.AllPosts.Single(p => p.Id.ToString() == post.PostParent).Title</a></h6>
                                                     <button class="btn btn-primary float-right" type="button" data-toggle="modal" data-target="#modal-@post.Id">
@@ -139,11 +138,14 @@
                                                         </p>
                                                     }
                                                     <p class="text-muted"><a href="javascript:void(0)">@post.Nickname</a> svarade <span class="text-secondary font-weight-bold">@post.DateTime</span></p>
+                                                    <button class="btn btn-primary float-right" type="button" data-toggle="modal" data-target="#chatmodal-@post.Id">
+                                                        privat meddelande
+                                                    </button>
                                                     <div class="text-muted small text-center align-self-center">
                                                         <div class="row">
                                                             <partial name="_ThreadPostReplyPartial" model="@post" />
                                                             <button class="btn btn-default" onclick="HideFunction('@post.Id', 'message @post.Id')">
-                                                                <i id="message @post.Id" class="col-1 bi bi-chat-left-text">@post.Replyes</i>
+                                                                <i id="message @post.Id" class="col-1 bi bi-chat-left-text">@Model.AllPosts.Where(p=>p.PostParent == post.Id.ToString()).Count() svar</i>
                                                             </button>
                                                         </div>
                                                     </div>
@@ -158,7 +160,7 @@
                                             <div class="card mb-2" style="width:80%">
                                                 <div class="card-body p-2 p-sm-3">
                                                     <div class="media forum-item">
-                                                        <a href="#" data-toggle="collapse" data-target=".forum-content"><img src="@item.ImageURL" class="mr-3 rounded-circle" width="50" height="50" alt="User" /></a>
+                                                        <a href="#" data-toggle="collapse" data-target=".forum-content"><img src="@("data:image/jpg;base64, " + Convert.ToBase64String((await userManager.FindByIdAsync(item.UserId)).Image))" class="mr-3 rounded-circle" width="50" height="50" alt="User" /></a>
                                                         <div class="media-body text-break">
                                                             <h6><a href="#" data-toggle="collapse" data-target=".forum-content" class="text-body">RE: @Model.AllPosts.Single(p => p.Id.ToString() == item.PostParent).Title</a></h6>
                                                             <button class="btn btn-primary float-right" type="button" data-toggle="modal" data-target="#threadModal">
@@ -195,7 +197,6 @@
                                 <input type="hidden" asp-for="PostModel.UserId" value="@Model.MyUser.Id" />
                                 <input type="hidden" asp-for="PostModel.Nickname" value="@Model.MyUser.NickName" />
                                 <input type="hidden" asp-for="PostModel.Category" value="@Model.Category" />
-                                <input type="hidden" asp-for="PostModel.ImageURL" value="@Model.ImageURL" />
                                 <input type="hidden" asp-for="PostModel.PostParent" value="@Model.OriginPost.Id.ToString()" />
                                 <div class="modal-header d-flex align-items-center bg-primary text-white">
                                     <h6 class="modal-title mb-0" id="threadModalLabel">Svara i tråden</h6>
@@ -224,5 +225,5 @@
                 </div>
             </div>
         </div>
-            </div>
-        </div>
+    </div>
+</div>

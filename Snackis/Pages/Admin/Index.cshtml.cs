@@ -39,6 +39,8 @@ namespace Snackis.Pages.Admin
         public CategoryModel CategoryModel { get; set; }
 
         public bool isUser { get; set; }
+        [BindProperty]
+        public string ForumName { get; set; }
         public bool isAdmin { get; set; }
         [BindProperty]
         public List<Post> Categories { get; set; }
@@ -46,7 +48,11 @@ namespace Snackis.Pages.Admin
         public List<Post> AllPosts { get; set; }
         public IQueryable<SnackisUser> Users { get; set; }
         [BindProperty(SupportsGet =true)]
-        public string DeleteCategoryId { get; set; }
+        public Guid DeleteCategoryId { get; set; }
+        [BindProperty(SupportsGet =true)]
+        public Guid DeleteforumId { get; set; }
+        [BindProperty(SupportsGet =true)]
+        public Guid DeletePostId { get; set; }
         private readonly RoleManager<IdentityRole> _roleManager;
         public UserManager<SnackisUser> _userManager;
         private readonly IPostRepository _postRepository;
@@ -63,14 +69,21 @@ namespace Snackis.Pages.Admin
             Roles = _roleManager.Roles.ToList();
             Users = _userManager.Users;
             AllPosts =await _postRepository.GetPosts();
-
-            if (DeleteCategoryId != null)
+            if (DeletePostId.ToString() != "00000000-0000-0000-0000-000000000000")
             {
-                await DeleteCategory(DeleteCategoryId);
+                var postToBeCencured = AllPosts.FirstOrDefault(p=>p.Id==DeletePostId);
+                postToBeCencured.Text = "inlägget har tagits bort av admin";
+                await _postRepository.UpdatePost(DeletePostId,postToBeCencured);
             }
+            if (DeleteCategoryId.ToString() != "00000000-0000-0000-0000-000000000000")
+            {
+                await _postRepository.DeletePostById(DeleteCategoryId);
+            }
+            if (DeleteforumId.ToString() != "00000000-0000-0000-0000-000000000000")
+            {
+                await _postRepository.DeletePostById(DeleteforumId);
 
-            Categories = await GetCategories();
-
+            }
             if (AddUserId != null)
             {
                 var alterUser = await _userManager.FindByIdAsync(AddUserId);
@@ -95,9 +108,18 @@ namespace Snackis.Pages.Admin
         {
             if (ModelState.IsValid)
             {
-                var client = new HttpClient();
-                var post = new Post() { Category = CategoryModel.Name, AbuseReport=false, PostParent="", Text="", Title="", UserId="" };
-                await client.PostAsJsonAsync("https://snackis-api.azurewebsites.net/api/post", post);
+                var category = new Post() { Category = CategoryModel.Name, AbuseReport=false };
+                await _postRepository.AddPostAsync(category);
+
+            }
+            return RedirectToPage("./index");
+        }
+        public async Task<IActionResult> OnPostAddForumAsync()
+        {
+            if (ModelState.IsValid)
+            {
+                var forum = new Post() { Heading = ForumName, AbuseReport = false };
+                await _postRepository.AddPostAsync(forum);
 
             }
             return RedirectToPage("./index");
@@ -123,17 +145,8 @@ namespace Snackis.Pages.Admin
                 await _roleManager.CreateAsync(role);
             }
         }
-        public async Task<List<Post>> GetCategories()
-        {
-            var client = new HttpClient();
-            Task<string> getCatagoryStringTask = client.GetStringAsync($"https://snackis-api.azurewebsites.net/api/category");
-            string categoryString = await getCatagoryStringTask;
-            return JsonConvert.DeserializeObject<List<Post>>(categoryString);
-        }
-        public async Task<HttpResponseMessage> DeleteCategory(string categoryName)
-        {
-            var client = new HttpClient();
-            return await client.DeleteAsync($"https://snackis-api.azurewebsites.net/api/category/"+categoryName);
-        }
+       
+
+
     }
 }

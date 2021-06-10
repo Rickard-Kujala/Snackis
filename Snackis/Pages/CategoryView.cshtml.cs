@@ -42,7 +42,10 @@ namespace Snackis.Pages
             AllPosts = await _postRepository.GetPosts();
             
             Category= Request.Cookies["MyCategoryCookie"];
-            
+            ViewData["Category"] = Category;
+
+            ViewData["PostModel"] = PostModel;
+
             if (Thread != null)
             {
                 Response.Cookies.Append("MyThreadCookie", $"{Thread}");
@@ -56,22 +59,13 @@ namespace Snackis.Pages
 
             if (ModelState.IsValid)
             {
-                var post = new Post
-                {
-                    Id = Guid.NewGuid(),
-                    Category = PostModel.Category,
-                    Title = PostModel.Title,
-                    Text = PostModel.Text,
-                    DateTime = DateTime.Now,
-                    AbuseReport = false,
-                    PostParent = PostModel.PostParent,
-                    UserId = PostModel.UserId,
-                    Nickname = PostModel.Nickname
-
-                };
-                await client.PostAsJsonAsync("https://snackis-api.azurewebsites.net/api/post", post);
+                await _postRepository.AddPostAsync(PostModel);
             }
             return RedirectToPage("Index");
+        }
+        public IActionResult OnPost()
+        {
+            return Page();
         }
     }
 }

@@ -19,8 +19,5 @@ namespace Snackis.Models
         public string PostParent { get; set; }
         public int Likes { get; set; }
         public int DisLikes { get; set; }
-        public int Replyes { get; set; }
-        public int Threads { get; set; }
-        public string ImageURL { get; set; }
     }
 }

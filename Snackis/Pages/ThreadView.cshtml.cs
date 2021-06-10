@@ -58,6 +58,7 @@ namespace Snackis.Pages
             Users = _userManager.Users.ToList();
             MyUser = await _userManager.GetUserAsync(User);
             AllPosts = await _postRepository.GetPosts();
+            ViewData["AllPosts"] = AllPosts;
             OriginPost = AllPosts.FirstOrDefault(p => p.Id.ToString() == Request.Cookies["MyThreadCookie"]);
             Category = OriginPost.Category;
             if  (MyUser != null && MyUser.Image != null )
@@ -98,8 +99,6 @@ namespace Snackis.Pages
         }
         public async Task<IActionResult> OnPostAddChatAsync()
         {
-           
-
             if (ModelState.IsValid)
             {
                 var result=await _chatRepository.PostAsync(ChatModel);
