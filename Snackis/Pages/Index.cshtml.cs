@@ -60,6 +60,7 @@ namespace Snackis.Pages
             AllPosts = await _postRepository.GetPosts();
             Categories = await _postRepository.GetCategories();
             ViewData["LoginModel"] = Input;
+            ViewData["Forums"] = AllPosts.Where(p => p.Heading != null && p.Text == null).ToList();
 
             if (Category!=null)
             {

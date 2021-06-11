@@ -75,24 +75,10 @@ namespace Snackis.Pages
         }
         public async Task<IActionResult> OnPostAddPostAsync()
         {
-            //var client = new HttpClient();
-            //MyUser = await _userManager.GetUserAsync(User);
 
             if (ModelState.IsValid)
             {
-                //var post = new Post
-                //{
-                //    Id = Guid.NewGuid(),
-                //    Category = PostModel.Category,
-                //    Title = PostModel.Title,
-                //    Text = PostModel.Text,
-                //    DateTime = DateTime.Now,
-                //    AbuseReport = false,
-                //    PostParent = PostModel.PostParent,
-                //    UserId = PostModel.UserId,
-                //    Nickname = PostModel.Nickname
-                //};
-                //await client.PostAsJsonAsync("https://snackis-api.azurewebsites.net/api/post", post);
+                
                 await _postRepository.AddPostAsync(PostModel);
             }
             return RedirectToPage("ThreadView");

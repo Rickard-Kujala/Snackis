@@ -14,8 +14,8 @@
                         <td>
                             <div class="card-body bg-dark text-white">
                                 <div class="row">
-                                    <h3 class="col-6">@Model.OriginPost.Title</h3>
-                                    <button class="btn btn-primary has-icon col-4 float-right" type="button" data-toggle="modal" data-target="#threadModal">
+                                    <h3 class="col-10">@Model.OriginPost.Title</h3>
+                                    <button class="btn btn-primary has-icon col-2float-right" type="button" data-toggle="modal" data-target="#threadModal">
                                         Gör ett inlägg i tråden
                                     </button>
                                 </div>
@@ -145,7 +145,7 @@
                                                         <div class="row">
                                                             <partial name="_ThreadPostReplyPartial" model="@post" />
                                                             <button class="btn btn-default" onclick="HideFunction('@post.Id', 'message @post.Id')">
-                                                                <i id="message @post.Id" class="col-1 bi bi-chat-left-text">@Model.AllPosts.Where(p=>p.PostParent == post.Id.ToString()).Count() svar</i>
+                                                                <i @*id="message @post.Id"*@ class="col-1 bi bi-chat-left-text">@Model.AllPosts.Where(p=>p.PostParent == post.Id.ToString()).Count() svar</i>
                                                             </button>
                                                         </div>
                                                     </div>
@@ -169,6 +169,9 @@
                                                             <p class="text-secondary">
                                                                 @item.Text
                                                             </p>
+                                                            <button class="btn btn-primary float-right" type="button" data-toggle="modal" data-target="#chatmodal-@post.Id">
+                                                                privat meddelande
+                                                            </button>
                                                             <p class="text-muted"><a href="javascript:void(0)">@item.Nickname</a> svarade <span class="text-secondary font-weight-bold">@Model.OriginPost.DateTime</span></p>
                                                             <div class="text-muted small text-center align-self-center">
                                                                 <div class="row">

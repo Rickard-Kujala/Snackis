@@ -30,7 +30,7 @@
                     Visa alla
                 </a>
                 <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                    @foreach (var category in Model.AllPosts.Where(p => p.Text == null))
+                    @foreach (var category in Model.AllPosts.Where(p => p.Text == null && p.Heading==null))
                     {
                         <p class="pl-1">@category.Category<a class="text-danger float-right pr-1" href="?deletecategoryid=@category.Id">ta bort</a></p>
                     }
@@ -40,8 +40,8 @@
         </div>
         <div class="col-4">
             <h4>Forum</h4>
-            <form class="rounded" asp-page-handler="addcategory">
-                <div>
+            <form class="rounded" asp-page-handler="addforum">
+                <div class="mb-1">
                     <label asp-for="ForumName">Skapa ny</label>
                     <input asp-for="ForumName" />
                     <button id="submit" type="submit">Skapa forum</button>
@@ -60,6 +60,7 @@
             </div>
         </div>
     </div>
+    <hr />
     <div class="row">
         <div class="row col-4">
             <h4>Amälda inlägg</h4>

@@ -7,19 +7,7 @@
     var Model = _userRepository.GetModel();
     var user = await UserManager.GetUserAsync(User);
 }
-@*<form asp-page-handler="login">
-        <div class="form-group"
-            <label asp-for="@loginModel.Email"></label>
-            <input asp-for="@loginModel.Email" class="form-control" />
-        </div>
-        <div class="form-group">
-            <label asp-for="@loginModel.Password"></label>
-            <input asp-for="@loginModel.Password" class="form-control" />
-        </div>
-        <div class="form-group">
-            <button type="submit" class="btn btn-primary">Logga in</button>
-        </div>
-    </form>*@
+
 @if (SignInManager.IsSignedIn(User))
 {
     <div class="d-flex justify-content-center">
