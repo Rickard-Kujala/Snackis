@@ -18,44 +18,51 @@
 @if (Model.AllPosts != null)
 {
     <div class="container ">
-        <table style="width:inherit">
-            <thead>
-                <tr class="card text-white bg-light">
-                    <td>
-                        <div class="card text-white bg-dark">
-                            <div class="card-body row">
-                                <h5 class="col-6 card-title">Kategory</h5>
-                                <h5 class="col-4 card-title">Trådar</h5>
-                                <h5 class="col-2 card-title">Inlägg</h5>
-                            </div>
-                        </div>
-                    </td>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>
-                        @foreach (var post in Model.Categories)
-                        {
-                            <div class="card text-dark bg-light mb-1">
-                                <div class="card-body row">
-                                    <a class="col-6 text-dark" href="?category=@post"><h5 class="card-title col-6">@post</h5></a>
-                                    <h5 class="card-title col-4">@Model.AllPosts.Where(p => p.Category == post && p.Title != null).Count()<button class="btn btn-default" onclick="HideFunction('@post','message @post')"><p id="message @post">visa fem senaste</p></button></h5>
-                                    <h5 class="card-title col-2"><i class="bi bi-envelope"></i> @Model.AllPosts.Where(p => p.Category == post).Where(p => p.PostParent != null).Count()</h5>
-                                    <div id="@post" style="display: none">
-                                        @foreach (var item in Model.AllPosts.Where(p => p.Category == post && p.Title != null).Take(5))
-                                        {
-                                            <a href="?category=@item.Category"><p class="text-dark">@item.Title</p></a>
-                                        }
-                                        
+        <div class="row">
+            <div class="col-8">
+                <table style="width:inherit">
+                    <thead>
+                        <tr class="card text-white bg-light">
+                            <td>
+                                <div class="card text-white bg-dark">
+                                    <div class="card-body row">
+                                        <h5 class="col-6 card-title">Kategori</h5>
+                                        <h5 class="col-4 card-title">Trådar</h5>
+                                        <h5 class="col-2 card-title">Inlägg</h5>
                                     </div>
                                 </div>
-                            </div>
-                        }
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+                            </td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                @foreach (var post in Model.Categories)
+                                {
+                                    <div class="card text-dark bg-light mb-1">
+                                        <div class="card-body row">
+                                            <a class="col-6 text-dark" href="?category=@post"><h5 class="card-title col-6">@post</h5></a>
+                                            <h5 class="card-title col-4">@Model.AllPosts.Where(p => p.Category == post && p.Title != null).Count()<button class="btn btn-default" onclick="HideFunction('@post','message @post')"><p id="message @post">visa fem senaste</p></button></h5>
+                                            <h5 class="card-title col-2"><i class="bi bi-envelope"></i> @Model.AllPosts.Where(p => p.Category == post).Where(p => p.PostParent != null).Count()</h5>
+                                            <div id="@post" style="display: none">
+                                                @foreach (var item in Model.AllPosts.Where(p => p.Category == post && p.Title != null).Take(5))
+                                                {
+                                                    <a href="?category=@item.Category"><p class="text-dark">@item.Title</p></a>
+                                                }
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-4">
+
+            </div>
+        </div>
         <!-- New Thread Modal -->
         <div class="modal fade" id="threadModal" tabindex="-1" role="dialog" aria-labelledby="threadModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg" role="document">

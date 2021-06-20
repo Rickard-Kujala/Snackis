@@ -15,5 +15,8 @@ namespace Snackis.Models
         public bool IsRead { get; set; }
         public List<string> GroupMembers { get; set; } = new();
         public string GroupAdminId { get; set; }
+        public string GroupChatTitle { get; set; }
+        public string ParentPost { get; set; }
+
     }
 }

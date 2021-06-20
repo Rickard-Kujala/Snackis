@@ -7,58 +7,38 @@
 
 }
 <div class="container">
-    <div class="align-content-center">
+    
+    @*<div class="align-content-center">
         @if (Model.MyUser != null)
         {
 
-            @*<form asp-page-handler="addpost">
-                <input type="hidden" asp-for="PostModel.UserId" value="@Model.MyUser.Id.ToString()" />
-                <input type="hidden" asp-for="PostModel.Nickname" value="@Model.MyUser.NickName" />
-                <input type="hidden" asp-for="PostModel.Category" value="@Model.Category" />
-
-                <div class="text-center"> <label asp-for="PostModel.Title">Titel</label></div>
-                <div class="text-center"><textarea asp-for="PostModel.Title"></textarea></div>
-
-                <div class="text-center"> <label asp-for="PostModel.Text">Starta ny tråd i @Model.Category</label></div>
-                <div class="text-center"><textarea asp-for="PostModel.Text"></textarea></div>
-                <div class="text-center"><button id="submit" type="submit">Skapa! </button></div>
-            </form>
-            <component type="typeof(Components.ThreadReplyCard)" render-mode="Static" param-myuser="@Model.MyUser" param-category="@Model.Category" param-imageurl="null" param-parentpost="null" />*@
             <partial name="_NewThreadPartial" />
         }
-    </div>
+    </div>*@
     <table class="table-hover table-striped " style="width:inherit">
+        <thead>
+            <tr>
+                <td>
+                    <div class="card-body bg-dark text-white">
+                        <div class="row mr-1">
+                            <h3 class="col-8">@Model.Category</h3>
+                            <div class="col-4"><partial name="_NewThreadPartial" /></div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        </thead>
         <tbody>
             <tr>
                 <td>
                     @foreach (var thread in Model.AllPosts.Where(p => p.Category == Model.Category && p.Title != null))
                     {
-                        @*<div class="card text-dark bg-light mb-1 rounded">
-            <div class="card-body ">
-                <div class="media forum-item row">
-                    <p class="row col-2 float-left"><img src="@("data:image/jpg;base64, " + Convert.ToBase64String((await userManager.FindByIdAsync(thread.UserId)).Image))" alt="Avatar" class="avatar"></p>
-                    <div class="row">
-                        <a class="col-6 card-title text-dark row" href="?thread=@thread.Id"><h5>@thread.Title</h5></a>
-                        <p class="col-2 text-sm-left">11 svar</p>
-                        <div class=" row text-sm-left">
-                            <p class="col-6">Av @thread.Nickname</p>
-                            <p class="col-6  text-muted">@thread.DateTime</p>
-                        </div>
-                    </div>
-                </div>
-                        <div class=" row text-sm-left">
-                <p class="col-4">Av @thread.Nickname</p>
-                <p class="col-4  text-muted">@thread.DateTime</p>
-            </div>
-                        </div>
-        </div>*@
-                        <div class="card mb-2">
+                        <div class="card mb-1">
                             <div class="card-body p-2 p-sm-3">
                                 <div class="container">
                                     <div class="row ">
-                                        <a  data-toggle="collapse" data-target=".forum-content"><img src="@("data:image/jpg;base64, " + Convert.ToBase64String((await userManager.FindByIdAsync(thread.UserId)).Image))" class="mr-3 rounded-circle" width="50" height="50" alt="User" /></a>
+                                        <a data-toggle="collapse" data-target=".forum-content"><img src="@("data:image/jpg;base64, " + Convert.ToBase64String((await userManager.FindByIdAsync(thread.UserId)).Image))" class="mr-3 rounded-circle" width="50" height="50" alt="User" /></a>
                                         <a href="?thread=@thread.Id"><h5>@thread.Title</h5></a>
-                                        
                                     </div>
                                 </div>
                             </div>

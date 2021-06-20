@@ -1,7 +1,7 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
 <head>
-   
+
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - Snackis</title>
@@ -12,6 +12,7 @@
     <!-- Bootstrap CSS CDN -->
     @*<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">*@
     <!-- Font Awesome JS -->
+
     <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/solid.js" integrity="sha384-tzzSw1/Vo+0N5UhStP3bvwWPq+uvzCMfrN1fEFe+xBmv1C/AtVX5K0uZtmcHitFZ" crossorigin="anonymous"></script>
     <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/fontawesome.js" integrity="sha384-6OIrr52G08NpOFSZdxxz1xdNSndlD4vdcf/q2myIUVO0VsqaGHJsB0RaBE01VTOY" crossorigin="anonymous"></script>
 </head>
@@ -21,6 +22,7 @@
     @inject SignInManager<SnackisUser> SignInManager
     @inject UserManager<SnackisUser> UserManager
     @inject Repositories.IPostRepository _postRepository
+    @inject Repositories.IChatRepository _chatRepository
     @{
         var loginModel = (Models.LoginModel)ViewData["LoginModel"];
         //var forums = (List<Models.Post>)ViewData["Forums"];
@@ -33,12 +35,12 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
     <!-- Bootstrap JS -->
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
-    <div class="wrapper">
-        <nav id="sidebar">
+    <div class="wrapper m-3" >
+        <nav id="sidebar" > 
             <div class="sidebar-header">
                 <h3>Snackis</h3>
             </div>
-            <ul class="list-unstyled components ">
+            <ul class="list-unstyled components  ">
                 <li class="active">
                     <a href="#homeSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Välj Forum</a>
                     <ul class="collapse list-unstyled" id="homeSubmenu">
@@ -62,7 +64,7 @@
                         <li>
                             <a asp-area="" asp-page="/Privacy">Policy</a>
                         </li>
-                        @if (user!=null && await UserManager.IsInRoleAsync(user,"Admin"))
+                        @if (user != null && await UserManager.IsInRoleAsync(user, "Admin"))
                         {
                             <li>
                                 <a asp-page="/Admin/Index">Admin</a>
@@ -74,31 +76,33 @@
                 <li>
                     <a href="#">Contact</a>
                 </li>
-                <div class="sidebar-header">
-                    <h3>Chattis</h3>
-                </div>
-
+                @if (SignInManager.IsSignedIn(User))
+                {
+                    <div class="sidebar-header">
+                        <h3>Chattis</h3>
+                    </div>
+                    <li>
+                        <a asp-page="/Chat/Index">Meddelanden  <p style="font-size: xx-small" class="float-right">@_chatRepository.GetAllChats().Result.Where(c => c.ReceiverId == user.Id && c.IsRead == false).Count() olästa </p></a>
+                    </li>
+                }
             </ul>
             <partial name="_LoginSidebarPartial" />
         </nav>
-        <!-- Page Content -->
-        <div id="content" style="width:inherit">
-            <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div id="content" style="width:inherit;">
+            <nav class="navbar navbar-expand-lg navbar-light bg-transparent">
                 <div class="container-fluid">
                     <button type="button" id="sidebarCollapse" class="btn btn-info">
                         <i class="fas fa-align-left"></i>
-                        <span>Toggle Sidebar</span>
+                        @*<span>Toggle Sidebar</span>*@
                     </button>
                 </div>
             </nav>
-            <!-- We'll fill this with dummy content -->
             <div>
-                <main role="main" class="pb-3">
+                <main role="main" class="pb-3" >
                     @RenderBody()
                 </main>
             </div>
         </div>
-
     </div>
 
     <footer class="border-top footer text-muted">

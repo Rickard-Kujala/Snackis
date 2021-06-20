@@ -31,7 +31,7 @@ namespace Snackis.Pages
         [BindProperty]
         public Post PostModel { get; set; }
         [BindProperty]
-        public Chat ChatModel { get; set; }
+        public Models.Chat ChatModel { get; set; }
         public string Category { get; set; }
         [BindProperty]
         public List<Post> AllPosts { get; set; }
@@ -56,7 +56,7 @@ namespace Snackis.Pages
         public async Task<IActionResult> OnGetAsync()
         {
             Users = _userManager.Users.ToList();
-            MyUser = await _userManager.GetUserAsync(User);
+            MyUser = await _userManager.GetUserAsync(User); 
             AllPosts = await _postRepository.GetPosts();
             ViewData["AllPosts"] = AllPosts;
             OriginPost = AllPosts.FirstOrDefault(p => p.Id.ToString() == Request.Cookies["MyThreadCookie"]);

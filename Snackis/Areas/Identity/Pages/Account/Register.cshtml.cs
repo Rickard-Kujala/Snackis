@@ -51,7 +51,6 @@ namespace Snackis.Areas.Identity.Pages.Account
 
         public class InputModel
         {
-
             // Ny Kod -->
             [Required]
             [DataType(DataType.Text)]
@@ -61,6 +60,10 @@ namespace Snackis.Areas.Identity.Pages.Account
             [Required]
             [Display(Name = "Födelseår")]
             public int BirthYear { get; set; }
+
+            [DataType(DataType.Text)]
+            [Display(Name = "Personlig beskrivning")]
+            public string PersonalText { get; set; }
             // <-- Ny kod
 
 
@@ -95,10 +98,12 @@ namespace Snackis.Areas.Identity.Pages.Account
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             if (ModelState.IsValid)
             {
-                var user = new SnackisUser { UserName = Input.Email,
+                var user = new SnackisUser {
+                    UserName = Input.Email,
                     Email = Input.Email,
                     NickName=Input.NickName,
-                    BirthYear=Input.BirthYear};
+                    BirthYear=Input.BirthYear,
+                    PersonalText=Input.PersonalText};
                 var result = await _userManager.CreateAsync(user, Input.Password);
 
                 if (result.Succeeded)

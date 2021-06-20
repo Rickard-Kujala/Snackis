@@ -53,6 +53,9 @@ namespace Snackis.Areas.Identity.Pages.Account.Manage
             [BindProperty]
             public byte[] Image { get; set; }
 
+            [Display(Name = "Personlig beskrivning")]
+            public string PersonalText { get; set; }
+
         }
 
         private async Task LoadAsync(SnackisUser user)
@@ -67,7 +70,8 @@ namespace Snackis.Areas.Identity.Pages.Account.Manage
                 PhoneNumber = phoneNumber,
                 NickName = user.NickName,
                 BirthYear = user.BirthYear,
-                Image = user.Image
+                Image = user.Image,
+                PersonalText = user.PersonalText
                 
             };
         }
@@ -131,6 +135,10 @@ namespace Snackis.Areas.Identity.Pages.Account.Manage
                     image = ms.ToArray();
                 }
                     user.Image = image;
+            }
+            if (Input.PersonalText!=null)
+            {
+                user.PersonalText = Input.PersonalText;
             }
             await _userManager.UpdateAsync(user);
             // <-- Ny kod

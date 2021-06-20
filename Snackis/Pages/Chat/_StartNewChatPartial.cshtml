@@ -1,0 +1,23 @@
+﻿@using Snackis.Pages
+@using Snackis.Models
+@model string
+@using Microsoft.AspNetCore.Identity
+@using Snackis.Areas.Identity.Data
+@inject UserManager<SnackisUser> userManager
+@{
+
+    var MyUser = await userManager.GetUserAsync(User);
+    var ChatModel = (Models.Chat)ViewData["ChatModel"];
+
+}
+@if (MyUser != null)
+{
+<div>
+    <form asp-page-handler="addchat">
+        <input type="hidden" asp-for="@ChatModel.SenderId" value="@MyUser.Id" />
+        <input type="hidden" asp-for="@ChatModel.ReceiverId" value="@Model" />
+        <textarea style="width:85%" asp-for="@ChatModel.Text" placeholder="Skriv ett svar..."></textarea>
+        <div><button style="width:10%" type="submit" class="btn btn-primary float-right ml-1">Skicka</button></div>
+    </form>
+</div>
+}

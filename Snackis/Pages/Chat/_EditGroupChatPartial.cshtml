@@ -1,0 +1,43 @@
+﻿@using Snackis.Pages
+@using Snackis.Models
+@model Models.Chat
+@using Microsoft.AspNetCore.Identity
+@using Snackis.Areas.Identity.Data
+@inject UserManager<SnackisUser> userManager
+@{
+    var MyUser = await userManager.GetUserAsync(User);
+}
+
+
+@*<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">*@
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+<div class="container">
+    <div class="dropdown">
+        <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
+            Bjud in användare
+            <span class="caret"></span>
+        </button>
+        <ul class="@*dropdown-menu*@ dropdown-menu scrollable-menu">
+            <input class="form-control" id="myInput" type="text" placeholder="Sök på användarnamn..">
+            @foreach (var user in userManager.Users.Where(u => u.Id != MyUser.Id))
+            {
+                <li><a class="m-1" href="?newgroupmemberid=@user.Id">@user.NickName</a></li>
+
+            }
+        </ul>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $("#myInput").on("keyup", function () {
+            var value = $(this).val().toLowerCase();
+            $(".dropdown-menu li").filter(function () {
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
+        });
+    });
+</script>

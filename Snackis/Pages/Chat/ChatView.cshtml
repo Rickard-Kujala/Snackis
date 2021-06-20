@@ -1,0 +1,59 @@
+﻿@page
+@model Snackis.Pages.Chat.ChatViewModel
+@using Microsoft.AspNetCore.Identity
+@using Snackis.Areas.Identity.Data
+@inject UserManager<SnackisUser> userManager
+@{
+    var user = await userManager.GetUserAsync(User);
+}
+<div class="container">
+    <div class="row ">
+        <div class="card m-3 col-8 overflow-auto" style="height:75vh">
+            <h2 class="text-center mt-3" style="font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif">Chatt med @userManager.FindByIdAsync(Model.SenderId).Result.NickName</h2>
+            @for (int i = 0; i < Model.AllChats@*.Where(c => c.SenderId == Model.SenderId || c.ReceiverId == user.Id)*@.Count(); i++)
+            {
+                if (Model.AllChats[i].SenderId==user.Id)
+                {
+                    <div class="chatcontainer text-break ml-3 mr-3" style="background-color: #7386D5">
+                        @if (userManager.FindByIdAsync(Model.AllChats[i].SenderId).Result.Image == null)
+                        {
+                            <a id="manage" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage"><img src="https://bootdey.com/img/Content/avatar/avatar1.png" class="rounded-circle" width="50" height="50" alt="User" /></a>
+                            <p>@Model.AllChats[i].Text</p>
+                            <span class="time-right">@Model.AllChats[i].Date.ToShortTimeString()</span>
+
+                        }
+                        else
+                        {
+                            <img src="@("data:image/jpg;base64, " + Convert.ToBase64String((await userManager.FindByIdAsync(Model.AllChats[i].SenderId)).Image))" class="mr-3 rounded-circle" width="50" height="50" alt="User" />
+                            <p>@Model.AllChats[i].Text</p>
+                            <span class="time-right">@Model.AllChats[i].Date.ToShortTimeString()</span>
+
+                        }
+                    </div>
+                }
+                else
+                {
+                    <div class="chatcontainer text-break ml-3 mr-3">
+                        @if (userManager.FindByIdAsync(Model.AllChats[i].SenderId).Result.Image == null)
+                        {
+                            <a id="manage" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage"><img src="https://bootdey.com/img/Content/avatar/avatar1.png" class="rounded-circle float-right" width="50" height="50" alt="User" /></a>
+                            <p>@Model.AllChats[i].Text</p>
+                            <span class="time-left">@Model.AllChats[i].Date.ToShortTimeString()</span>
+
+                        }
+                        else
+                        {
+                            <img src="@("data:image/jpg;base64, " + Convert.ToBase64String((await userManager.FindByIdAsync(Model.AllChats[i].SenderId)).Image))" class="mr-3 rounded-circle float-right" width="50" height="50" alt="User" />
+                            <p>@Model.AllChats[i].Text</p>
+                            <span class="time-left">@Model.AllChats[i].Date.ToShortTimeString()</span>
+
+                        }
+                    </div>
+                }
+            }
+        </div>
+    </div>
+    <div class="chatcontainer col-8">
+            <partial name="_StartNewChatPartial" model="@Model.SenderId" />
+    </div>
+</div>

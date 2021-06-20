@@ -10,14 +10,22 @@
 
 @if (SignInManager.IsSignedIn(User))
 {
-    <div class="d-flex justify-content-center">
+<div class="d-flex justify-content-center ">
+    @if (user.Image == null)
+    {
+        <a id="manage" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage"><img src="https://bootdey.com/img/Content/avatar/avatar1.png" class="rounded-circle" width="70" height="70" alt="User" /></a>
+
+    }
+    else
+    {
         <a id="manage" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage"><img src="@("data:image/jpg;base64, " + Convert.ToBase64String((user.Image)))" class="rounded-circle" width="70" height="70" alt="User" /></a>
-    </div>
+    }
+</div>
     <div class="d-flex justify-content-center">
         <p>Inloggad som @user.NickName</p>
     </div>
-    <form id="logoutForm" class="form-inline d-flex justify-content-center" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Page("/Index", new { area = "" })">
-        <button id="logout" type="submit" class=" nav-link btn btn-link text-white">Logga ut</button>
+    <form  id="logoutForm" class="form-inline d-flex justify-content-center " asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Page("/Index", new { area = "" })">
+        <button id="logout" type="submit" class=" nav-link btn btn-link text-white ">Logga ut</button>
     </form>
 }
 else

@@ -1,0 +1,41 @@
+﻿@using Snackis.Pages
+@model string
+@using Microsoft.AspNetCore.Identity
+@using Snackis.Areas.Identity.Data
+@inject UserManager<SnackisUser> userManager
+@{
+    var user = await userManager.FindByIdAsync(Model);
+}
+
+<button class="btn btn-link" type="button" data-toggle="modal" title="visa profil" data-target="#MyModal-@Model">
+    @if (userManager.FindByIdAsync(Model).Result.Image == null)
+    {
+        <img src="https://bootdey.com/img/Content/avatar/avatar1.png" class="rounded-circle" width="50" height="50" alt="User" />
+        @*<a id="manage" asp-area="Identity" asp-page="/Account/Manage/Index" title="visa profil"><img src="https://bootdey.com/img/Content/avatar/avatar1.png" class="rounded-circle" width="50" height="50" alt="User" /></a>*@
+
+    }
+    else
+    {
+        <img src="@("data:image/jpg;base64, " + Convert.ToBase64String((await userManager.FindByIdAsync(Model)).Image))" class="mr-3 rounded-circle" width="50" height="50" alt="User" />
+    }
+</button>
+<div class="modal fade" id="MyModal-@Model" tabindex="-1" role="dialog" aria-labelledby="threadModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="card text-center">
+                @if (userManager.FindByIdAsync(Model).Result.Image == null)
+                {
+                    <img src="https://bootdey.com/img/Content/avatar/avatar1.png" style="width:100%" alt="User" />
+                }
+                else
+                {
+                    <img src="@("data:image/jpg;base64, " + Convert.ToBase64String((await userManager.FindByIdAsync(Model)).Image))" style="width:100%" alt="User" />
+                }
+                <h1>@userManager.FindByIdAsync(Model).Result.NickName</h1>
+                <p> @userManager.FindByIdAsync(Model).Result.Email</p>
+                <p>@userManager.FindByIdAsync(Model).Result.PersonalText</p>
+                
+            </div>
+        </div>
+    </div>
+</div>
