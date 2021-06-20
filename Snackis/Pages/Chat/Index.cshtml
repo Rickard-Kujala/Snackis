@@ -22,8 +22,8 @@
                     {
                         <img src="@("data:image/jpg;base64, " + Convert.ToBase64String((await userManager.FindByIdAsync(group.SenderId)).Image))" class="mr-3 rounded-circle" width="50" height="50" alt="User" />
                     }
-                    <a href="=senderid=@group.SenderId">
-                        <p>@group.Count olästa meddelanden från  @userManager.FindByIdAsync(group.SenderId).Result.NickName</p>
+                    <a href="=?senderid=@group.SenderId">
+                        <p>@group.Count olästa meddelanden från @userManager.FindByIdAsync(group.SenderId).Result.NickName</p>
                     </a>
                 </div>
             }

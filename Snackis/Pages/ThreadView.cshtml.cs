@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
@@ -42,6 +43,8 @@ namespace Snackis.Pages
         public string ImageURL { get; set; }
         [BindProperty]
         public List<SnackisUser > Users { get; set; }
+        [BindProperty]
+        public byte[] ImageInput { get; set; }
 
         public ThreadViewModel(IPostRepository postRepository,
             UserManager<SnackisUser> userManager,
@@ -75,12 +78,32 @@ namespace Snackis.Pages
         }
         public async Task<IActionResult> OnPostAddPostAsync()
         {
-
+            if (Request.Form.Files.Count > 0)
+            {
+                var file = Request.Form.Files[0];
+                Byte[] image;
+                using (MemoryStream ms = new())
+                {
+                    await file.CopyToAsync(ms);
+                    image = ms.ToArray();
+                }
+                string imageBase64Data = Convert.ToBase64String(image);
+                PostModel.Image = string.Format($"data:image/jpg;base64, {imageBase64Data}");
+            }
             if (ModelState.IsValid)
             {
-                
+                //if (ImageInput!=null )
+                //{
+                   
+
+
+                //    string imageBase64Data = Convert.ToBase64String(ImageInput);
+                //    PostModel.Image= string.Format($"data:image/jpg;base64, {imageBase64Data}");
+                //}
+               
                 await _postRepository.AddPostAsync(PostModel);
             }
+            
             return RedirectToPage("ThreadView");
         }
         public async Task<IActionResult> OnPostAddChatAsync()

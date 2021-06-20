@@ -81,6 +81,7 @@ namespace Snackis.Repositories
                     PostParent = postModel.PostParent,
                     UserId = postModel.UserId,
                     Nickname = postModel.Nickname,
+                    Image=postModel.Image
 
                 };
                 return await client.PostAsJsonAsync(_configuration["SnackisAPIPost"], post);

@@ -144,7 +144,7 @@ namespace Snackis.Areas.Identity.Pages.Account.Manage
             // <-- Ny kod
 
             await _signInManager.RefreshSignInAsync(user);
-            StatusMessage = "Your profile has been updated";
+            StatusMessage = "Dina ändringar har sparats!";
             return RedirectToPage();
 
             
