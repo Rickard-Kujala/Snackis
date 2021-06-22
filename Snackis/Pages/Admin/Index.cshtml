@@ -2,7 +2,7 @@
 @model Snackis.Pages.Admin.IndexModel
 @{
 }
-<div class="container">
+<div class="container bg-white">
     <div class="row">
         <div class="col-4">
             @foreach (var role in Model.Roles)
@@ -20,6 +20,18 @@
             <h4>Kategorier</h4>
             <form class="rounded" asp-page-handler="addcategory">
                 <div class="mb-1">
+                    <div class="dropdown show">
+                        <a class="btn btn-info" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            välj ett forum
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                       @foreach (var forum  in Model.AllPosts.Where(x=>x.Heading!= null).Select(x=>x.Heading).Distinct())
+	                    {
+                           <a href="?forumcategory=@forum">@forum</a><br />
+		 
+	                    }
+                        </div>
+                    </div>
                     <label asp-for="CategoryModel.Name">Skapa ny</label>
                     <input asp-for="CategoryModel.Name" />
                     <button id="submit" type="submit">Spara kategori</button>
@@ -30,7 +42,7 @@
                     Visa alla
                 </a>
                 <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                    @foreach (var category in Model.AllPosts.Where(p => p.Text == null && p.Heading==null))
+                    @foreach (var category in Model.AllPosts.Where(p => p.Text == null && p.Heading == null))
                     {
                         <p class="pl-1">@category.Category<a class="text-danger float-right pr-1" href="?deletecategoryid=@category.Id">ta bort</a></p>
                     }
@@ -42,8 +54,8 @@
             <h4>Forum</h4>
             <form class="rounded" asp-page-handler="addforum">
                 <div class="mb-1">
-                    <label asp-for="ForumName">Skapa ny</label>
-                    <input asp-for="ForumName" />
+                    <label asp-for="ForumModel.Heading">Skapa ny</label>
+                    <input asp-for="ForumModel.Heading" />
                     <button id="submit" type="submit">Skapa forum</button>
                 </div>
             </form>

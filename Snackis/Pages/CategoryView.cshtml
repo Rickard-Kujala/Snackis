@@ -7,48 +7,52 @@
 
 }
 <div class="container">
-    
-    @*<div class="align-content-center">
-        @if (Model.MyUser != null)
-        {
-
-            <partial name="_NewThreadPartial" />
-        }
-    </div>*@
-    <table class="table-hover table-striped " style="width:inherit">
-        <thead>
-            <tr>
-                <td>
-                    <div class="card-body bg-dark text-white">
-                        <div class="row mr-1">
-                            <h3 class="col-8">@Model.Category</h3>
-                            <div class="col-4"><partial name="_NewThreadPartial" /></div>
-                        </div>
-                    </div>
-                </td>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>
-                    @foreach (var thread in Model.AllPosts.Where(p => p.Category == Model.Category && p.Title != null))
-                    {
-                        <div class="card mb-1">
-                            <div class="card-body p-2 p-sm-3">
-                                <div class="container">
-                                    <div class="row ">
-                                        <a data-toggle="collapse" data-target=".forum-content"><img src="@("data:image/jpg;base64, " + Convert.ToBase64String((await userManager.FindByIdAsync(thread.UserId)).Image))" class="mr-3 rounded-circle" width="50" height="50" alt="User" /></a>
-                                        <a href="?thread=@thread.Id"><h5>@thread.Title</h5></a>
-                                    </div>
+    <div class="row">
+        <div class="col-9 bg-white p-1">
+            <table class="table-hover table-striped " style="width:100%">
+                <thead>
+                    <tr>
+                        <td>
+                            <div class="card-body bg-dark text-white">
+                                <div class="row mr-1">
+                                    <h3 class="col-8">@Model.Category</h3>
+                                    <div class="col-4"><partial name="_NewThreadPartial" /></div>
                                 </div>
                             </div>
-                        </div>
-                    }
-                </td>
-            </tr>
-        </tbody>
-    </table>
-
+                        </td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            @foreach (var thread in Model.AllPosts.Where(p => p.Category == Model.Category && p.Title != null))
+                            {
+                                <div class="card mb-1">
+                                    <div class="card-body p-2 p-sm-3">
+                                        <div class="container">
+                                            <div class="">
+                                                <a class="float-left" data-toggle="collapse" data-target=".forum-content"><img src="@("data:image/jpg;base64, " + Convert.ToBase64String((await userManager.FindByIdAsync(thread.UserId)).Image))" class="mr-3 rounded-circle" width="50" height="50" alt="User" /></a>
+                                                <a class="" href="?thread=@thread.Id"><h5>@thread.Title</h5></a>
+                                            <p style="font-size:smaller">Av: @userManager.FindByIdAsync(thread.UserId).Result.NickName</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-2 card ml-3 text-center overflow-auto" style="min-height:75vh; max-height:75vh">
+            <h2 class="text-center mt-3">Kategorier i @Model.Forum</h2>
+            <hr />
+            @foreach (var category in Model.Categories)
+            {
+                <a href="">@category</a><br />
+            }
+        </div>
+    </div>
 </div>
 
 

@@ -12,10 +12,13 @@
 
  }
 
-<button class="btn btn-primary float-right" type="button" data-toggle="modal" data-target="#MyModal">
-    <i class="bi bi-reply"></i>
-    Starta en tråd i @ViewData["Category"]
-</button>
+@if (MyUser!= null)
+{
+    <button class="btn btn-primary float-right" type="button" data-toggle="modal" data-target="#MyModal">
+        <i class="bi bi-reply"></i>
+        Ny tråd!
+    </button>
+}
 <div class="modal fade" id="MyModal" tabindex="-1" role="dialog" aria-labelledby="threadModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">

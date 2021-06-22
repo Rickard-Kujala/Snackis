@@ -30,6 +30,10 @@ namespace Snackis.Pages
         public string Thread { get; set; }
         [BindProperty]
         public List<Post> AllPosts { get; set; }
+        [BindProperty]
+        public List<string> Categories { get; set; }
+        [BindProperty]
+        public string Forum { get; set; }
         public CategoryViewModel(IPostRepository postRepository, UserManager<SnackisUser> userManager)
         {
             _postRepository = postRepository;
@@ -40,8 +44,11 @@ namespace Snackis.Pages
             MyUser = await _userManager.GetUserAsync(User);
 
             AllPosts = await _postRepository.GetPosts();
-            
-            Category= Request.Cookies["MyCategoryCookie"];
+            Forum = AllPosts.FirstOrDefault(p => p.Id.ToString() == Request.Cookies["MyForumCookie"]).Heading;
+
+            Categories = AllPosts.Where(p => p.Heading == Forum).Select(p => p.Category).Distinct().ToList();
+
+            Category = Request.Cookies["MyCategoryCookie"];
             ViewData["Category"] = Category;
 
             ViewData["PostModel"] = PostModel;
@@ -61,7 +68,7 @@ namespace Snackis.Pages
             {
                 await _postRepository.AddPostAsync(PostModel);
             }
-            return RedirectToPage("Index");
+            return RedirectToPage("CategoryView");
         }
         public IActionResult OnPost()
         {

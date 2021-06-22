@@ -33,6 +33,7 @@ namespace Snackis
             services.AddScoped<IChatRepository, ChatRepository>();
             services.AddScoped<PostFormService>();
             services.AddScoped<IPostRepository, PostRepository>();
+            services.AddScoped<IUserRepository, UserRepository>();
             services.AddAuthorization(options =>
             {
                 options.AddPolicy("AdminPolicy",
@@ -44,6 +45,11 @@ namespace Snackis
                 options.Conventions.AuthorizeFolder("/Admin", "AdminPolicy");
                 options.Conventions.AllowAnonymousToPage("/Admin/Info");
                 options.Conventions.AllowAnonymousToFolder("/Admin/PublicAdmin");
+            });
+            services.Configure<CookiePolicyOptions>(option =>
+            {
+                option.CheckConsentNeeded = context => true;
+                option.MinimumSameSitePolicy = Microsoft.AspNetCore.Http.SameSiteMode.Strict;
             });
         }
 
@@ -61,7 +67,7 @@ namespace Snackis
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
-
+            app.UseCookiePolicy();
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 

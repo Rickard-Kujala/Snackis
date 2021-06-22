@@ -28,8 +28,8 @@
                 </div>
             }
         </div>
-        <div class="card col 4 ml-3 pre-scrollable" style="min-height:75vh" >
-            <h2 class="text-center mt-3">Konversationer</h2>
+        <div class="card col 4  pre-scrollable " style="min-height:75vh" >
+            <h2 class="text-center ">Konversationer</h2>
             @foreach (var senderId in Model.AllChats.Where(x => x.ReceiverId == user.Id).GroupBy(x => x.SenderId).Select(x => x.Key).Distinct())
             {
                 <div class="chatcontainer">
@@ -49,7 +49,7 @@
                     }
                 </div>
             }
-            <h2 class="text-center mt-3">Gruppchattar</h2>
+            <h2 class="text-center m-1">Gruppchattar</h2>
             @foreach (var groupChatWhereUserIsAdmin in Model.AllChats.Where(x => x.GroupAdminId != null && x.GroupAdminId.ToString() == user.Id))
             {
         <div class="chatcontainer">
@@ -100,7 +100,7 @@
                     }
                 }
             }
-            <div class="m-3">
+            <div class="m-3 pb-1">
                 <partial name="_StartNewgroupchatPartial" model="@Model.ChatModel" />
             </div>
         </div>

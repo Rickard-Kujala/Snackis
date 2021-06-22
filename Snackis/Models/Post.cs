@@ -20,5 +20,13 @@ namespace Snackis.Models
         public int Likes { get; set; }
         public int DisLikes { get; set; }
         public string Image { get; set; }
+        public List<string[]> UserReactions { get; set; } = new();
+        public Post()
+        {
+            string[]strArray= new string[2];
+            UserReactions.Add(strArray);
+        }
+
     }
+    
 }

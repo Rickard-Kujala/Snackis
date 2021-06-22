@@ -8,5 +8,6 @@ namespace Snackis.Models
     public class CategoryModel
     {
         public string Name { get; set; }
+        public string Forum { get; set; }
     }
 }

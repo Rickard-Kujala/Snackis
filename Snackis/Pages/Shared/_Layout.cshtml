@@ -2,7 +2,8 @@
 <html lang="en">
 <head>
 
-    <meta charset="utf-8" />
+    @*<meta charset="utf-8" />*@
+    <meta charset="iso-8859-1">
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - Snackis</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
@@ -27,7 +28,7 @@
         var loginModel = (Models.LoginModel)ViewData["LoginModel"];
         //var forums = (List<Models.Post>)ViewData["Forums"];
         var user = await UserManager.GetUserAsync(User);
-        var forums = _postRepository.GetPosts().Result.Where(p=>p.Heading != null && p.Text == null);
+        var forums = _postRepository.GetPosts().Result.Where(p=>p.Heading != null && p.Category == null);
     }
     <!-- jQuery CDN - Slim version (=without AJAX) -->
     @*<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>*@
@@ -35,19 +36,19 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
     <!-- Bootstrap JS -->
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
-    <div class="wrapper m-3" >
+    <div class="wrapper" >
         <nav id="sidebar" > 
             <div class="sidebar-header">
                 <h3>Snackis</h3>
             </div>
             <ul class="list-unstyled components  ">
-                <li class="active">
+                <li>
                     <a href="#homeSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Välj Forum</a>
                     <ul class="collapse list-unstyled" id="homeSubmenu">
                         @foreach (var forum in forums)
                         {
                             <li>
-                                <a asp-page="/Index">@forum.Heading</a>
+                                <a asp-page="/ForumView" onclick="setCookie('MyForumCookie', '@forum.Id')">@forum.Heading</a>
                             </li>
 
                         }
@@ -70,6 +71,7 @@
                                 <a asp-page="/Admin/Index">Admin</a>
                             </li>
                         }
+                        
 
                     </ul>
                 </li>
@@ -98,6 +100,7 @@
                 </div>
             </nav>
             <div>
+                <partial name="_CookieConsentPartial"/>
                 <main role="main" class="pb-3" >
                     @RenderBody()
                 </main>

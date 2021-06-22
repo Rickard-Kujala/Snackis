@@ -31,10 +31,15 @@ namespace Snackis.Repositories
         {
             return await Client.GetFromJsonAsync<Post>(_configuration["SnackisAPIPost"] + "/" + $"{Id.ToString()}");
         }
-        public async Task<List<string>> GetCategories()
+        public async Task<List<string>> GetCategories(string forum)
         {
             var allPosts = await GetPosts(); 
-            return allPosts.Select(p => p.Category).Distinct().ToList();
+            return allPosts.Where(p=>p.Heading==forum).Select(p => p.Category).Distinct().ToList();
+        }
+        public async Task<List<string>> GetForums()
+        {
+            var allPosts = await GetPosts();
+            return allPosts.Select(p => p.Heading).Distinct().ToList();
         }
         public async Task<HttpResponseMessage> UpdatePost(Guid id, Post updatedPost)
         {

@@ -26,11 +26,13 @@ namespace Snackis.Pages
         public Post PostModel { get; set; }
 
         public List<Post> AllPosts { get; set; }
-        public List<string> Categories { get; set; }
+        public List<string> Forums { get; set; }
         [BindProperty(SupportsGet =true)]
         public string Category { get; set; }
         [BindProperty]
         public LoginModel Input { get; set; }
+        [BindProperty(SupportsGet =true)]
+        public string Forum { get; set; }
 
 
         private readonly UserManager<SnackisUser> _userManager;
@@ -58,14 +60,14 @@ namespace Snackis.Pages
             MyUser = await _userManager.GetUserAsync(User);
             AdminExists = await _roleManager.RoleExistsAsync("Admin");
             AllPosts = await _postRepository.GetPosts();
-            Categories = await _postRepository.GetCategories();
+            Forums = await _postRepository.GetForums();
             ViewData["LoginModel"] = Input;
             ViewData["Forums"] = AllPosts.Where(p => p.Heading != null && p.Text == null).ToList();
 
-            if (Category!=null)
+            if (Forum !=null)
             {
-                Response.Cookies.Append("MyCategoryCookie", $"{Category}");
-                return RedirectToPage("CategoryView");
+                Response.Cookies.Append("MyForumCookie", $"{Forum}");
+                return RedirectToPage("ForumView");
             }
             return Page();
         }

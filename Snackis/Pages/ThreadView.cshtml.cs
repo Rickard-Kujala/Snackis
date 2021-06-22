@@ -92,15 +92,6 @@ namespace Snackis.Pages
             }
             if (ModelState.IsValid)
             {
-                //if (ImageInput!=null )
-                //{
-                   
-
-
-                //    string imageBase64Data = Convert.ToBase64String(ImageInput);
-                //    PostModel.Image= string.Format($"data:image/jpg;base64, {imageBase64Data}");
-                //}
-               
                 await _postRepository.AddPostAsync(PostModel);
             }
             
@@ -114,17 +105,47 @@ namespace Snackis.Pages
             }
             return RedirectToPage("ThreadView");
         }
-        public async Task<IActionResult> OnPostReactAsync(Guid id, string value)
+        public async Task<IActionResult> OnPostReactAsync(Guid id, string value, bool regret)
         {
+            MyUser = await _userManager.GetUserAsync(User);
+
             _PostFormService.Form = Request.Form;
             var updated = await _postRepository.GetPostsById(id);
+            string[] arr = new string[2];
             switch (value)
             {
                 case "Likes":
-                    updated.Likes += 1;
+                    if (regret)
+                    {
+                        
+                        var x=updated.UserReactions.FirstOrDefault(x => x[0] == MyUser.Id);
+                        updated.UserReactions.Remove(x);
+                        updated.Likes -= 1;
+                    }
+                    else
+                    {
+
+                        updated.Likes += 1;
+                        arr[0] = $"{MyUser.Id}";
+                        arr[1] = "Likes";
+                        updated.UserReactions.Add(arr);
+                    }
                     break;
                 case "Dislikes":
-                    updated.DisLikes += 1;
+                    if (regret)
+                    {
+                        var x = updated.UserReactions.FirstOrDefault(x => x[0] == MyUser.Id);
+                        updated.UserReactions.Remove(x);
+                        updated.DisLikes -= 1;
+                    }
+                    else
+                    {
+                        updated.DisLikes += 1;
+                        arr[0] = $"{MyUser.Id}";
+                        arr[1] = "Dislikes";
+                        updated.UserReactions.Add(arr);
+                    }
+                    
                     break;
                 case"Abuse":
                     updated.AbuseReport = true;

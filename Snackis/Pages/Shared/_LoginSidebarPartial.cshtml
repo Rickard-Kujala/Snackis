@@ -10,30 +10,30 @@
 
 @if (SignInManager.IsSignedIn(User))
 {
-<div class="d-flex justify-content-center ">
-    @if (user.Image == null)
-    {
-        <a id="manage" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage"><img src="https://bootdey.com/img/Content/avatar/avatar1.png" class="rounded-circle" width="70" height="70" alt="User" /></a>
+    <div class="d-flex justify-content-center ">
+        @if (user.Image == null)
+        {
+            <a id="manage" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage"><img src="https://bootdey.com/img/Content/avatar/avatar1.png" class="rounded-circle" width="70" height="70" alt="User" /></a>
 
-    }
-    else
-    {
-        <a id="manage" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage"><img src="@("data:image/jpg;base64, " + Convert.ToBase64String((user.Image)))" class="rounded-circle" width="70" height="70" alt="User" /></a>
-    }
-</div>
+        }
+        else
+        {
+            <a id="manage" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage"><img src="@("data:image/jpg;base64, " + Convert.ToBase64String((user.Image)))" class="rounded-circle" width="70" height="70" alt="User" /></a>
+        }
+    </div>
     <div class="d-flex justify-content-center">
         <p>Inloggad som @user.NickName</p>
     </div>
-    <form  id="logoutForm" class="form-inline d-flex justify-content-center " asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Page("/Index", new { area = "" })">
+    <form id="logoutForm" class="form-inline d-flex justify-content-center " asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Page("/Index", new { area = "" })">
         <button id="logout" type="submit" class=" nav-link btn btn-link text-white ">Logga ut</button>
     </form>
 }
 else
 {
 
-    <form method="post" asp-area="Identity" asp-page="/Account/Login">
+    <form class="m-1" method="post" asp-area="Identity" asp-page="/Account/Login">
         <div asp-validation-summary="All" class="text-danger"></div>
-        <div class="form-group">
+        <div class="form-group ">
             <label asp-for="@Model.Email"></label>
             <input asp-for="@Model.Email" class="form-control" />
             <span asp-validation-for="@Model.Email" class="text-danger"></span>
@@ -47,7 +47,7 @@ else
             <div class="checkbox">
                 <label asp-for="@Model.RememberMe">
                     <input asp-for="@Model.RememberMe" />
-                    @*@Html.DisplayNameFor(loginModel.RememberMe)*@
+                    kom ihåg mig
                 </label>
             </div>
         </div>
@@ -55,10 +55,12 @@ else
             <button type="submit" class="btn btn-primary">Logga in</button>
         </div>
     </form>
-    <ul class="list-unstyled components ">
-        <li >
-            <a class="nav-link " id="register" asp-area="Identity" asp-page="/Account/Register">Skapa konto</a>
+    <a class="nav-link" id="register" asp-area="Identity" asp-page="/Account/Register"><p class="m-1" style="font-size:medium">Skapa konto/Registrera dig här!</p></a>
+
+    @*<ul class="list-unstyled components ">
+        <li>
+            <a class="nav-link " id="register" asp-area="Identity" asp-page="/Account/Register"><p class="fonts">Skapa konto/Registrera dig här</p></a>
         </li>
 
-     </ul>
-  }
+    </ul>*@
+}

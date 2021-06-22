@@ -37,10 +37,13 @@ namespace Snackis.Pages.Admin
         public List<string> UserRoles { get; set; }
         [BindProperty]
         public CategoryModel CategoryModel { get; set; }
+        [BindProperty]
 
         public bool isUser { get; set; }
         [BindProperty]
-        public string ForumName { get; set; }
+        public Post ForumModel { get; set; }
+        [BindProperty(SupportsGet =true)]
+        public string ForumCategory { get; set; }
         public bool isAdmin { get; set; }
         [BindProperty]
         public List<Post> Categories { get; set; }
@@ -69,6 +72,10 @@ namespace Snackis.Pages.Admin
             Roles = _roleManager.Roles.ToList();
             Users = _userManager.Users;
             AllPosts =await _postRepository.GetPosts();
+            if (ForumCategory != null)
+            {
+                Response.Cookies.Append("MyForumCookie", $"{ForumCategory}");
+            }
             if (DeletePostId.ToString() != "00000000-0000-0000-0000-000000000000")
             {
                 var postToBeCencured = AllPosts.FirstOrDefault(p=>p.Id==DeletePostId);
@@ -104,11 +111,13 @@ namespace Snackis.Pages.Admin
 
             return Page();
         }
-        public async Task<IActionResult> OnPostAddCategoryAsync()
+        public async Task<IActionResult> OnPostAddCategoryAsync(Guid id)
         {
             if (ModelState.IsValid)
             {
+               
                 var category = new Post() { Category = CategoryModel.Name, AbuseReport=false };
+                category.Heading= Request.Cookies["MyForumCookie"];
                 await _postRepository.AddPostAsync(category);
 
             }
@@ -118,8 +127,9 @@ namespace Snackis.Pages.Admin
         {
             if (ModelState.IsValid)
             {
-                var forum = new Post() { Heading = ForumName, AbuseReport = false };
-                await _postRepository.AddPostAsync(forum);
+                //var forum = new Post() { Heading = ForumName, AbuseReport = false };
+
+                await _postRepository.AddPostAsync(ForumModel);
 
             }
             return RedirectToPage("./index");
