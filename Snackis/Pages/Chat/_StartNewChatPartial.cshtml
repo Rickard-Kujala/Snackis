@@ -12,12 +12,11 @@
 }
 @if (MyUser != null)
 {
-<div>
     <form asp-page-handler="addchat">
         <input type="hidden" asp-for="@ChatModel.SenderId" value="@MyUser.Id" />
         <input type="hidden" asp-for="@ChatModel.ReceiverId" value="@Model" />
         <textarea style="width:85%" asp-for="@ChatModel.Text" placeholder="Skriv ett svar..."></textarea>
-        <div><button style="width:10%" type="submit" class="btn btn-primary float-right ml-1">Skicka</button></div>
+        <button style="width:10%" type="submit" class="btn btn-primary float-right ml-1">Skicka</button>
     </form>
-</div>
+    
 }

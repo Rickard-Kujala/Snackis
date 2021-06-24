@@ -88,12 +88,13 @@ namespace Snackis.Areas.Identity.Pages.Account
         {
             ReturnUrl = returnUrl;
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
-            AdminExists = await _roleManager.RoleExistsAsync("Admin");
 
         }
 
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
+            AdminExists = await _roleManager.RoleExistsAsync("Admin");
+
             returnUrl ??= Url.Content("~/");
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             if (ModelState.IsValid)

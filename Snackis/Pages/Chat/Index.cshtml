@@ -8,8 +8,8 @@
 }
 
 <div class="container" >
-    <div class="row"  >
-        <div class="card col-8 ">
+    <div class="row "  >
+        <div class="card col-8 m-1">
             <h2 class="text-center mt-3">Nya meddelanden</h2>
             @foreach (var group in Model.AllChats.Where(x => x.IsRead == false && x.ReceiverId==user.Id).GroupBy(x => x.SenderId).Select(x => new { SenderId = x.Key, Count = x.Count(), Chats = x.ToList() }))
             {
@@ -28,11 +28,11 @@
                 </div>
             }
         </div>
-        <div class="card col 4  pre-scrollable " style="min-height:75vh" >
+        <div class="card col 4  m-1 pre-scrollable " style="min-height:75vh" >
             <h2 class="text-center ">Konversationer</h2>
             @foreach (var senderId in Model.AllChats.Where(x => x.ReceiverId == user.Id).GroupBy(x => x.SenderId).Select(x => x.Key).Distinct())
             {
-                <div class="chatcontainer">
+                <div class="chatcontainer m-1">
                     @if (userManager.FindByIdAsync(senderId).Result.Image == null)
                     {
                         <a href="?senderid=@senderId">
@@ -52,7 +52,7 @@
             <h2 class="text-center m-1">Gruppchattar</h2>
             @foreach (var groupChatWhereUserIsAdmin in Model.AllChats.Where(x => x.GroupAdminId != null && x.GroupAdminId.ToString() == user.Id))
             {
-        <div class="chatcontainer">
+        <div class="chatcontainer m-1">
             <a href="?groupchatid=@groupChatWhereUserIsAdmin.Id">
                 <p>@groupChatWhereUserIsAdmin.GroupChatTitle</p>
             </a>
@@ -83,7 +83,7 @@
                 {
                     if (id == user.Id.ToString())
                     {
-                        <div class="chatcontainer">
+                        <div class="chatcontainer m-1">
                             <a href="?groupchatid=@groupChat.Id">
                                 <p>@groupChat.GroupChatTitle</p>
                             </a>

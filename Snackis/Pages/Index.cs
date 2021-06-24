@@ -61,6 +61,10 @@ namespace Snackis.Pages
             AdminExists = await _roleManager.RoleExistsAsync("Admin");
             AllPosts = await _postRepository.GetPosts();
             Forums = await _postRepository.GetForums();
+            foreach (var forum in Forums)
+            {
+
+            }
             ViewData["LoginModel"] = Input;
             ViewData["Forums"] = AllPosts.Where(p => p.Heading != null && p.Text == null).ToList();
 

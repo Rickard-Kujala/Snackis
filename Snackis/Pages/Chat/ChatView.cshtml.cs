@@ -20,9 +20,12 @@ namespace Snackis.Pages.Chat
         public string SenderId { get; set; }
         public SelectList Users { get; set; }
         public List<Models.Chat> AllChats { get; set; }
+        public List<Models.Chat> AllMessages { get; set; }
+
         public SnackisUser MyUser { get; set; }
         [BindProperty]
         public Models.Chat ChatModel { get; set; }
+
         public ChatViewModel(IChatRepository chatRepository, UserManager<SnackisUser> userManager)
            
         {
@@ -35,7 +38,7 @@ namespace Snackis.Pages.Chat
             SenderId = Request.Cookies["MyChatCookie"];
 
             AllChats = await _chatRepository.GetAllChats();
-            AllChats=AllChats.Where(c => c.SenderId == SenderId || c.ReceiverId == SenderId).ToList();
+            AllMessages=AllChats.Where(c => c.SenderId == SenderId || c.ReceiverId == SenderId).ToList();
             foreach (var message in AllChats)
             {
                 if (message.IsRead!=true)

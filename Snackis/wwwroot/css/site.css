@@ -2,19 +2,16 @@
 for details on configuring this project to bundle and minify static web assets. */
 
 
-   
-
-
-
-
 body {
     margin-top: 20px;
     color: #1a202c;
     text-align: left;
-    background-color:  #e2e8f0;
-    font-family: 'Poppins', sans-serif;
+    background-color: #e2e8f0;
+    /*font-family: 'Poppins', sans-serif;*/
+    font-family: 'cursive';
     background: #fafafa;
     background-image: url(../Assets/Images/nature-forest-cb-background-143-11608532653qp86tbfgxv.jpg);
+    /*background-image: url(../Assets/Images/09945bae41d385a92d59f73df20e6063.jpeg);*/
     background-size: contain;
 }
 p {
@@ -70,10 +67,10 @@ a, a:hover, a:focus {
     min-width: 250px;
     max-width: 250px;
     min-height: 100vh;
-    background: #7386D5;
+    /*background: #7386D5;*/
+    background: #1a202c;
     color: #fff;
     transition: all 0.3s;
-    
 }
     #sidebar a {
         color:white;
@@ -83,9 +80,10 @@ a, a:hover, a:focus {
         margin-left: -250px;
     }
     #sidebar .sidebar-header {
-    padding: 20px;
-    background: #6d7fcc;
-}
+        padding: 20px;
+        /*background: #6d7fcc;*/
+        background: #1a202c;
+    }
 
 #sidebar ul.components {
     padding: 20px 0;
@@ -107,14 +105,16 @@ a, a:hover, a:focus {
     background: #fff;
 }
 
-#sidebar ul li.active > a, a[aria-expanded="true"] {
-    color: #fff;
-    background: #6d7fcc;
-}
+    #sidebar ul li.active > a, a[aria-expanded="true"] {
+        color: #fff;
+        /*background: #6d7fcc;*/
+        background: #1a202c;
+    }
 ul ul a {
     font-size: 0.9em !important;
     padding-left: 30px !important;
-    background: #6d7fcc;
+    /*background: #6d7fcc;*/
+    background: #b200ff;
 }
 a[data-toggle="collapse"] {
     position: relative;

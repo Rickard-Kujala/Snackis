@@ -8,52 +8,129 @@
 }
 <div class="container">
     <div class="row ">
-        <div class="card m-3 col-8 overflow-auto" style="height:75vh">
-            <h2 class="text-center mt-3" style="font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif">Chatt med @userManager.FindByIdAsync(Model.SenderId).Result.NickName</h2>
-            @for (int i = 0; i < Model.AllChats@*.Where(c => c.SenderId == Model.SenderId || c.ReceiverId == user.Id)*@.Count(); i++)
+        <div class="card m-1 col-8 overflow-auto" style="height:75vh">
+            <h2 class="text-center mt-3">Chatt med @userManager.FindByIdAsync(Model.SenderId).Result.NickName</h2>
+            @for (int i = 0; i < Model.AllMessages@*.Where(c => c.SenderId == Model.SenderId || c.ReceiverId == user.Id)*@.Count(); i++)
+{
+if (Model.AllMessages[i].SenderId == user.Id)
+{
+    <div class="chatcontainer text-break ml-3 mr-3" style="background-color: #7386D5">
+        @if (userManager.FindByIdAsync(Model.AllMessages[i].SenderId).Result.Image == null)
+        {
+            <a id="manage" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage"><img src="https://bootdey.com/img/Content/avatar/avatar1.png" class="rounded-circle" width="50" height="50" alt="User" /></a>
+            <p>@Model.AllMessages[i].Text</p>
+            <span class="time-right float-right">@Model.AllMessages[i].Date.ToShortTimeString()</span>
+
+        }
+        else
+        {
+            <img src="@("data:image/jpg;base64, " + Convert.ToBase64String((await userManager.FindByIdAsync(Model.AllMessages[i].SenderId)).Image))" class="mr-3 rounded-circle" width="50" height="50" alt="User" />
+            <p>@Model.AllChats[i].Text</p>
+            <span class="time-right float-righ">@Model.AllMessages[i].Date.ToShortTimeString()</span>
+
+        }
+    </div>
+}
+else
+{
+    <div class="chatcontainer text-break ml-3 mr-3">
+        @if (userManager.FindByIdAsync(Model.AllMessages[i].SenderId).Result.Image == null)
+        {
+            <a id="manage" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage"><img src="https://bootdey.com/img/Content/avatar/avatar1.png" class="rounded-circle float-right" width="50" height="50" alt="User" /></a>
+            <p>@Model.AllMessages[i].Text</p>
+            <span class="time-left">@Model.AllMessages[i].Date.ToShortTimeString()</span>
+
+        }
+        else
+        {
+            <img src="@("data:image/jpg;base64, " + Convert.ToBase64String((await userManager.FindByIdAsync(Model.AllMessages[i].SenderId)).Image))" class="mr-3 rounded-circle float-right" width="50" height="50" alt="User" />
+            <p>@Model.AllMessages[i].Text</p>
+            <span class="time-left">@Model.AllMessages[i].Date.ToShortTimeString()</span>
+
+        }
+    </div>
+}
+}
+            <partial name="_StartNewChatPartial" model="@Model.SenderId" />
+
+        </div>
+        <div class="card col m-1 overflow-auto" style="min-height:75vh; max-height:75vh">
+            <h2 class="text-center mt-3">Konversationer</h2>
+            @foreach (var senderId in Model.AllChats.Where(x => x.ReceiverId == user.Id).GroupBy(x => x.SenderId).Select(x => x.Key).Distinct())
             {
-                if (Model.AllChats[i].SenderId==user.Id)
-                {
-                    <div class="chatcontainer text-break ml-3 mr-3" style="background-color: #7386D5">
-                        @if (userManager.FindByIdAsync(Model.AllChats[i].SenderId).Result.Image == null)
-                        {
-                            <a id="manage" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage"><img src="https://bootdey.com/img/Content/avatar/avatar1.png" class="rounded-circle" width="50" height="50" alt="User" /></a>
-                            <p>@Model.AllChats[i].Text</p>
-                            <span class="time-right">@Model.AllChats[i].Date.ToShortTimeString()</span>
+                <div class="chatcontainer m-1">
+                    @if (userManager.FindByIdAsync(senderId).Result.Image == null)
+                    {
+                        <a href="?senderid=@senderId">
+                            <img src="https://bootdey.com/img/Content/avatar/avatar1.png" class="rounded-circle" width="50" height="50" alt="User" />
+                            <p>@userManager.FindByIdAsync(senderId).Result.NickName</p>
+                        </a>
+                    }
+                    else
+                    {
+                        <a href="?senderid=@senderId">
+                            <img src="@("data:image/jpg;base64, " + Convert.ToBase64String((await userManager.FindByIdAsync(senderId)).Image))" class="mr-3 rounded-circle" width="50" height="50" alt="User" />
+                            <p>@userManager.FindByIdAsync(senderId).Result.NickName</p>
+                        </a>
+                    }
+                </div>
+            }
+            <h2 class="text-center ">Gruppchattar</h2>
+            @foreach (var groupChatWhereUserIsAdmin in Model.AllChats.Where(x => x.GroupAdminId != null && x.GroupAdminId.ToString() == user.Id))
+            {
+                <div class="chatcontainer m-1">
+                    <a href="?groupchatid=@groupChatWhereUserIsAdmin.Id">
+                        <p>@groupChatWhereUserIsAdmin.GroupChatTitle</p>
+                    </a>
 
+                    @if (userManager.FindByIdAsync(user.Id).Result.Image == null)
+                    {
+                        <img src="https://bootdey.com/img/Content/avatar/avatar1.png" class="rounded-circle" width="30" height="30" alt="User" />
+                    }
+                    else
+                    {
+                        <img src="@("data:image/jpg;base64, " + Convert.ToBase64String((await userManager.FindByIdAsync(user.Id)).Image))" class=" rounded-circle" width="30" height="30" alt="User" />
+                    }
+                    @foreach (var member in groupChatWhereUserIsAdmin.GroupMembers.Where(x => x != null))
+                    {
+                        @if (userManager.FindByIdAsync(member).Result.Image == null)
+                        {
+                            <img src="https://bootdey.com/img/Content/avatar/avatar1.png" class="rounded-circle" width="30" height="30" alt="User" />
                         }
                         else
                         {
-                            <img src="@("data:image/jpg;base64, " + Convert.ToBase64String((await userManager.FindByIdAsync(Model.AllChats[i].SenderId)).Image))" class="mr-3 rounded-circle" width="50" height="50" alt="User" />
-                            <p>@Model.AllChats[i].Text</p>
-                            <span class="time-right">@Model.AllChats[i].Date.ToShortTimeString()</span>
-
+                            <img src="@("data:image/jpg;base64, " + Convert.ToBase64String((await userManager.FindByIdAsync(member)).Image))" class="rounded-circle" width="30" height="30" alt="User" />
                         }
-                    </div>
-                }
-                else
+                    }
+                </div>
+            }
+            @foreach (var groupChat in Model.AllChats.Where(x => x.GroupMembers != null))
+            {
+                foreach (var id in groupChat.GroupMembers)
                 {
-                    <div class="chatcontainer text-break ml-3 mr-3">
-                        @if (userManager.FindByIdAsync(Model.AllChats[i].SenderId).Result.Image == null)
-                        {
-                            <a id="manage" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage"><img src="https://bootdey.com/img/Content/avatar/avatar1.png" class="rounded-circle float-right" width="50" height="50" alt="User" /></a>
-                            <p>@Model.AllChats[i].Text</p>
-                            <span class="time-left">@Model.AllChats[i].Date.ToShortTimeString()</span>
-
-                        }
-                        else
-                        {
-                            <img src="@("data:image/jpg;base64, " + Convert.ToBase64String((await userManager.FindByIdAsync(Model.AllChats[i].SenderId)).Image))" class="mr-3 rounded-circle float-right" width="50" height="50" alt="User" />
-                            <p>@Model.AllChats[i].Text</p>
-                            <span class="time-left">@Model.AllChats[i].Date.ToShortTimeString()</span>
-
-                        }
-                    </div>
+                    if (id == user.Id.ToString())
+                    {
+                        <div class="chatcontainer m-1">
+                            <a href="?groupchatid=@groupChat.Id">
+                                <p>@groupChat.GroupChatTitle</p>
+                            </a>
+                            @if (userManager.FindByIdAsync(id).Result.Image == null)
+                            {
+                                <img src="https://bootdey.com/img/Content/avatar/avatar1.png" class="rounded-circle" width="30" height="30" alt="User" />
+                            }
+                            else
+                            {
+                                <img src="@("data:image/jpg;base64, " + Convert.ToBase64String((await userManager.FindByIdAsync(id)).Image))" class="mr-3 rounded-circle" width="30" height="30" alt="User" />
+                            }
+                            <p>@groupChat.GroupChatTitle</p>
+                        </div>
+                    }
                 }
             }
+            <div class="mt-1">
+                <partial name="_StartNewgroupchatPartial" model="@Model.ChatModel" />
+            </div>
         </div>
     </div>
-    <div class="chatcontainer col-8">
-            <partial name="_StartNewChatPartial" model="@Model.SenderId" />
-    </div>
+    
 </div>

@@ -76,13 +76,11 @@
                     </ul>
                 </li>
                 <li>
-                    <a href="#">Contact</a>
+                    <a href="#">Kontakt</a>
                 </li>
                 @if (SignInManager.IsSignedIn(User))
                 {
-                    <div class="sidebar-header">
-                        <h3>Chattis</h3>
-                    </div>
+                    
                     <li>
                         <a asp-page="/Chat/Index">Meddelanden  <p style="font-size: xx-small" class="float-right">@_chatRepository.GetAllChats().Result.Where(c => c.ReceiverId == user.Id && c.IsRead == false).Count() olästa </p></a>
                     </li>

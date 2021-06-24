@@ -7,7 +7,16 @@
 {
     <div class="container ">
         <div class="row">
-            <div class="col-12">
+            <div class="col-12 bg-white p-3"style="border-radius: 25px">
+                <table style="width:inherit;">
+                    <thead>
+                        <tr class="card text-white p-2" style="background-color:#1a202c;">
+                            <td>
+                                <h4 class="text-center">Välkommen till Snackis</h4>
+                            </td>
+                        </tr>
+                    </thead>
+                </table>
                 <table style="width:inherit">
                     <thead>
                         <tr class="card text-white bg-light">
@@ -30,8 +39,8 @@
                                     <div class="card text-dark bg-light mb-1">
                                         <div class="card-body row">
                                             <a class="col-6 text-dark" href="?forum=@post.Id"><h5 class="card-title col-6">@post.Heading</h5></a>
-                                            <h5 class="card-title col-4">@Model.AllPosts.Where(p => p.Heading == post.Heading && p.Category != null ).Count()</h5>
-                                            <h5 class="card-title col-2">@Model.AllPosts.Where(p => p.Heading == post.Heading && p.Category != null).Count()</h5>
+                                            <h5 class="card-title col-4">@Model.AllPosts.Where(p => p.Heading == post.Heading && p.Category != null).Count()</h5>
+                                            <h5 class="card-title col-2">@Model.AllPosts.Where(p => p.Heading == post.Heading && p.Category != null && p.Title!=null).Count()</h5>
                                         </div>
                                     </div>
                                 }
