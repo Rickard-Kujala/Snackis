@@ -44,6 +44,10 @@
                                         </div>
                                     </div>
                                 }
+                                @foreach (var post in Model.AllPosts.Where(p => p.Heading != null && p.Category == null).GroupBy(p =>p.Heading))
+                                {
+
+                                }
                             </td>
                         </tr>
                     </tbody>

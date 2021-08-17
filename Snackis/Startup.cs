@@ -31,20 +31,22 @@ namespace Snackis
                 .AddRazorRuntimeCompilation();
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IChatRepository, ChatRepository>();
-            services.AddScoped<PostFormService>();
             services.AddScoped<IPostRepository, PostRepository>();
-            services.AddScoped<IUserRepository, UserRepository>();
+
             services.AddAuthorization(options =>
             {
                 options.AddPolicy("AdminPolicy",
                      policy => policy.RequireRole("Admin"));
+                options.AddPolicy("MustBeUser",
+                     policy => policy.RequireRole("User"));
             });
+
             services.AddRazorPages(options =>
             {
-                //options.Conventions.AuthorizePage("/Privacy","MustBeUser");
                 options.Conventions.AuthorizeFolder("/Admin", "AdminPolicy");
-                options.Conventions.AllowAnonymousToPage("/Admin/Info");
-                options.Conventions.AllowAnonymousToFolder("/Admin/PublicAdmin");
+                options.Conventions.AuthorizeFolder("/Chat", "MustBeUser");
+                //options.Conventions.AllowAnonymousToPage("/Admin/Info");
+                //options.Conventions.AllowAnonymousToFolder("/Admin/PublicAdmin");
             });
             services.Configure<CookiePolicyOptions>(option =>
             {

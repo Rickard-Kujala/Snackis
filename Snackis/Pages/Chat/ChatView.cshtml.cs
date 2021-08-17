@@ -25,6 +25,8 @@ namespace Snackis.Pages.Chat
         public SnackisUser MyUser { get; set; }
         [BindProperty]
         public Models.Chat ChatModel { get; set; }
+        [BindProperty(SupportsGet = true)]
+        public string GroupChatId { get; set; }
 
         public ChatViewModel(IChatRepository chatRepository, UserManager<SnackisUser> userManager)
            
@@ -46,6 +48,11 @@ namespace Snackis.Pages.Chat
                     message.IsRead = true;
                    var response=await _chatRepository.UpdateChatAsync(message.Id, message);
                 }
+            }
+            if (GroupChatId != null)
+            {
+                Response.Cookies.Append("MyGroupChatIdCookie", $"{GroupChatId}");
+                return RedirectToPage("Groupchat");
             }
 
             return Page();
