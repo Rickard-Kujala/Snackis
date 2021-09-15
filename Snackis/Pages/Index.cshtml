@@ -36,11 +36,20 @@
                             <td>
                                 @foreach (var post in Model.AllPosts.Where(p => p.Heading != null && p.Category == null))
                                 {
+                                    var p = 0;
+
                                     <div class="card text-dark bg-light mb-1">
                                         <div class="card-body row">
                                             <a class="col-6 text-dark" href="?forum=@post.Id"><h5 class="card-title col-6">@post.Heading</h5></a>
                                             <h5 class="card-title col-4">@Model.AllPosts.Where(p => p.Heading == post.Heading && p.Category != null).Count()</h5>
-                                            <h5 class="card-title col-2">@Model.AllPosts.Where(p => p.Heading == post.Heading && p.Category != null && p.Title!=null).Count()</h5>
+                                            @*<h5 class="card-title col-2">@Model.AllPosts.Where(p => p.Heading == post.Heading && p.Category != null && p.Text!=null).Count()</h5>*@
+                                            @*<h5 class="card-title col-2">@Model.AllPosts.Where(p => p.Category == Model.AllPosts.FirstOrDefault(p => p.Heading == post.Heading).Heading)</h5>*@
+                                            @foreach (var category in Model.AllPosts.Where(p => p.Heading == post.Heading && p.Category != null).Select(p => p.Category))
+                                            {
+                                                p += Model.AllPosts.Where(p => p.Category == category && p.Title != null).Count();
+                                            }
+                                            <h5 class="card-title col-2">@p</h5>
+
                                         </div>
                                     </div>
                                 }

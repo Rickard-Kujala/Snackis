@@ -30,11 +30,13 @@
                                 <div class="card mb-1">
                                     <div class="card-body p-2 p-sm-3">
                                         <div class="container">
-                                            <div class="">
-                                                <a class="float-left" data-toggle="collapse" data-target=".forum-content"><img src="@("data:image/jpg;base64, " + Convert.ToBase64String((await userManager.FindByIdAsync(thread.UserId)).Image))" class="mr-3 rounded-circle" width="50" height="50" alt="User" /></a>
-                                                <a class="" href="?thread=@thread.Id"><h5>@thread.Title</h5></a>
-                                            <p style="font-size:smaller">Av: @userManager.FindByIdAsync(thread.UserId).Result.NickName</p>
+                                            <div class="row">
+                                                <div class="col-2"><partial name="_UserImagepartial" model="@thread.UserId.ToString()" class="float-left" /></div>
+                                                @*<a class="float-left" data-toggle="collapse" data-target=".forum-content"><img src="@("data:image/jpg;base64, " + Convert.ToBase64String((await userManager.FindByIdAsync(thread.UserId)).Image))" class="mr-3 rounded-circle" width="50" height="50" alt="User" /></a>*@
+                                            <div class="col-10"><a class="" href="?thread=@thread.Id"><h5>@thread.Title</h5></a></div>
                                             </div>
+                                            <div class="col-2"></div>
+                                            <div class="col-10"><p style="font-size:smaller">Av: @userManager.FindByIdAsync(thread.UserId).Result.NickName</p></div>
                                         </div>
                                     </div>
                                 </div>

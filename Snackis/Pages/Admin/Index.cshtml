@@ -8,15 +8,8 @@
     var user = await UserManager.GetUserAsync(User);
 }
 <div class="container bg-white">
-    <div class="row">
-        <div class="col-4">
-
+    @*<div class="row">
             <h4>Användare</h4>
-            @*<p>Roller:</p>*@
-            @*@foreach (var role in Model.Roles)
-        {
-            <p>@role.Name</p>
-        }*@
             @foreach (var existingUser in Model.Users)
             {
                 if (existingUser.Email == "admin@snackis.se")
@@ -35,13 +28,15 @@
                 <input name="RoleName" />
                 <input type="submit" value="Spara roll" />
             </form>
-        </div>
-        <div class="col-4">
+        </div>*@
+    <hr />
+    <div class="row">
+        <div class="col-6">
             <h4>Kategorier</h4>
             @if (Model.ForumCategory != null)
             {
 
-                <p>valt forum @Model.ForumCategory</p>
+                <p>valt forum: @Model.ForumCategory</p>
                 <div class="dropdown show">
                     <a class="btn btn-info" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         Visa alla
@@ -60,34 +55,31 @@
                 <p>inget valt forum</p>
             }
             <form class="rounded" asp-page-handler="addcategory">
-                <div class="mb-1">
+                <div class="m-1">
                     <div class="dropdown show">
-                        <a class="btn btn-info" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            välj forum
-                        </a>
-                        <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                            @foreach (var forum in Model.AllPosts.Where(x => x.Heading != null && x.Category == null).Select(x => x.Heading).Distinct())
-                            {
-                                <a href="?forumcategory=@forum">@forum</a><br />
+                            <a class="btn btn-info" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                välj forum
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                @foreach (var forum in Model.AllPosts.Where(x => x.Heading != null && x.Category == null).Select(x => x.Heading).Distinct())
+                                {
+                                    <a href="?forumcategory=@forum">@forum</a><br />
 
-                            }
+                                }
+                            </div>
                         </div>
-                    </div>
                     <label asp-for="CategoryModel.Name">Skapa ny</label>
-                    <input asp-for="CategoryModel.Name" />
-                    <button id="submit" type="submit">Spara kategori</button>
+                    <input asp-for="CategoryModel.Name" placeholder="Kategorinamn.." />
                 </div>
+                <button id="submit" type="submit">Spara</button>
+
             </form>
         </div>
+    </div>
+    <hr />
+    <div class="row">
         <div class="col-4">
             <h4>Forum</h4>
-            <form class="rounded" asp-page-handler="addforum">
-                <div class="mb-1">
-                    <label asp-for="ForumModel.Heading">Namn på forum</label>
-                    <input asp-for="ForumModel.Heading" />
-                    <button id="submit" type="submit">Skapa forum</button>
-                </div>
-            </form>
             <div class="dropdown show">
                 <a class="btn btn-info" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     Visa alla
@@ -99,42 +91,54 @@
                     }
                 </div>
             </div>
+            <form class="rounded" asp-page-handler="addforum">
+                <div class="m-1">
+                    @*<label asp-for="ForumModel.Heading">Namn på forum</label>*@
+                    <input asp-for="ForumModel.Heading" placeholder="Forumnamn.." />
+                </div>
+                <button id="submit" type="submit">Spara</button>
+            </form>
         </div>
     </div>
     <hr />
-    <div class="row">
-        <div class="row col-4">
-            <h4>Amälda inlägg</h4>
-            @if (Model.AllPosts.Where(p => p.AbuseReport == true).Count() != 0)
-            {
-                @foreach (var post in Model.AllPosts.Where(p => p.AbuseReport == true))
-                {
-                    <button class="btn btn-default" onclick="HideFunction('@post.Id', 'message @post')">
-                        <p class="text-danger">@post.Nickname @post.DateTime</p>
-                    </button>
-                    <a class="text-danger" href="?deletepostid=@post.Id">ta bort</a>
-
-                    <div id="@post.Id" style="display: none" class="card-body p-2 p-sm-3">
+    <h4>Amälda inlägg</h4>
+    @if (Model.AllPosts.Where(p => p.AbuseReport == true).Count() != 0)
+    {
+        @foreach (var post in Model.AllPosts.Where(p => p.AbuseReport == true))
+        {
+            <button class="btn btn-default" onclick="HideFunction('@post.Id', 'message @post')">
+                @*<p class="text-danger">@post.Nickname @post.DateTime</p>*@
+                Granska inlägg
+            </button>
+            <div class="row">
+                <div class="col-12">
+                    <div class="card mb-1">
+                        <div class="card-body p-2 p-sm-3">
+                            <div class="container">
+                                <div class="">
+                                    <a class="float-left" data-toggle="collapse" data-target=".forum-content"><img src="@("data:image/jpg;base64, " + Convert.ToBase64String((await UserManager.FindByIdAsync(post.UserId)).Image))" class="mr-3 rounded-circle" width="50" height="50" alt="User" /></a>
+                                    <a class="" href="?thread=@post.Id"><h5>@post.Title</h5></a>
+                                    <p style="font-size:smaller">Av: @UserManager.FindByIdAsync(post.UserId).Result.NickName</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row" id="@post.Id" style="display: none" >
+                <div class="col-12">
+                    <div class="card-body p-2 p-sm-3">
                         <div class="media forum-item">
-                            <a href="#" data-toggle="collapse" data-target=".forum-content"><img src="https://bootdey.com/img/Content/avatar/avatar1.png" class="mr-3 rounded-circle" width="50" alt="User" /></a>
+                            <partial name="_UserImagepartial" model="@post.UserId" />
                             <div class="media-body text-break">
-                                <h6><a href="#" data-toggle="collapse" data-target=".forum-content" class="text-body">RE: @Model.AllPosts.FirstOrDefault(p => p.Id.ToString() == post.PostParent).Title</a></h6>
                                 <button class="btn btn-primary float-right" type="button" data-toggle="modal" data-target="#threadModal">
                                     <i class="bi bi-reply"></i>
                                 </button>
-                                @if (post.AbuseReport)
-                                {
-                                    <p class="text-secondary" style="filter:blur(2px)">
-                                        @post.Text
-                                    </p>
-                                }
-                                else
-                                {
-                                    <p class="text-secondary">
-                                        @post.Text
-                                    </p>
-                                }
-                                <p class="text-muted"><a href="javascript:void(0)">drewdan</a> replied <span class="text-secondary font-weight-bold">@post.DateTime</span></p>
+                                <p class="text-secondary">
+                                    @post.Text
+                                </p>
+                                <p class="text-muted"><a href="javascript:void(0)">@post.Nickname</a> svarade <span class="text-secondary font-weight-bold">@post.DateTime</span></p>
+
                                 <div class="text-muted small text-center align-self-center">
                                     <div class="row">
                                         <partial name="_ThreadPostReplyPartial" model="@post" />
@@ -143,10 +147,17 @@
                             </div>
                         </div>
                     </div>
-                }
+                </div>
+                <div class="row m-1">
+                    <a class="text-danger col-2" href="?deletepostid=@post.Id">ta bort</a>
+                    <a class="text-info col-2" href="?reversepostid=@post.Id">godkänn</a>
+                </div>
+            </div>
+        }
 
-            }
-        </div>
+    }
+    <div class="row">
+
     </div>
 </div>
 

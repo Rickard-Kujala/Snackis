@@ -56,11 +56,18 @@ namespace Snackis.Pages
 
         public async Task<IActionResult> OnGetAsync()
         {
-
             MyUser = await _userManager.GetUserAsync(User);
             AdminExists = await _roleManager.RoleExistsAsync("Admin");
             AllPosts = await _postRepository.GetPosts();
             Forums = await _postRepository.GetForums();
+            foreach (var category in AllPosts.Where(p => p.Heading == "Film" && p.Category != null).Select(p => p.Category))
+            {
+              var  p = AllPosts.Where(p => p.Category == category && p.Title != null).Count();
+            }
+            var f = AllPosts.Where(p => p.Heading == "Film" && p.Category != null).Select(p => p.Category);
+           
+            var b = AllPosts.Where(p => p.Heading == AllPosts.FirstOrDefault(p => p.Heading == "Film" && p.Category != null).Heading && p.Title != null).Count();
+            var c = AllPosts.Where(p =>p.Category == AllPosts.FirstOrDefault(p=>p.Heading == "Film" && p.Category != null).Category && p.Title != null).Count();
             foreach (var forum in Forums)
             {
 

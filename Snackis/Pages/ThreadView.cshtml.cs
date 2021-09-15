@@ -26,7 +26,6 @@ namespace Snackis.Pages
 
         [BindProperty]
         public bool IsReply { get; set; }
-        private PostFormService _PostFormService { get; }
         [BindProperty]
         public SnackisUser MyUser { get; set; }
         [BindProperty]
@@ -48,10 +47,8 @@ namespace Snackis.Pages
 
         public ThreadViewModel(IPostRepository postRepository,
             UserManager<SnackisUser> userManager,
-            PostFormService postFormService,
             IChatRepository chatRepository)
         {
-            _PostFormService = postFormService;
             _chatRepository = chatRepository;
             _postRepository = postRepository;
             _userManager = userManager;
@@ -109,7 +106,6 @@ namespace Snackis.Pages
         {
             MyUser = await _userManager.GetUserAsync(User);
 
-            _PostFormService.Form = Request.Form;
             var updated = await _postRepository.GetPostsById(id);
             string[] arr = new string[2];
             switch (value)

@@ -127,18 +127,9 @@
                                                 <button class="btn btn-primary float-right" type="button" data-toggle="modal" data-target="#modal-@post.Id">
                                                     <i class="bi bi-reply"></i>
                                                 </button>
-                                                @if (post.AbuseReport)
-                                                {
-                                                    <p class="text-secondary" style="filter:blur(2px)">
-                                                        @post.Text
-                                                    </p>
-                                                }
-                                                else
-                                                {
-                                                    <p class="text-secondary">
-                                                        @post.Text
-                                                    </p>
-                                                }
+                                                <p class="text-secondary">
+                                                    @post.Text
+                                                </p>
                                                 @if (post.Image != null)
                                                 {
                                                     <img src="@post.Image" style="width: 40px" />
@@ -167,7 +158,7 @@
                                                 <div class="media forum-item">
                                                     <partial name="_UserImagepartial" model="@item.UserId" />
                                                     <div class="media-body text-break">
-                                                        <h6><a href="#" data-toggle="collapse" data-target=".forum-content" class="text-body">RE: @Model.AllPosts.Single(p => p.Id.ToString() == item.PostParent).Title</a></h6>
+                                                        <h6><a href="#" data-toggle="collapse" data-target=".forum-content" class="text-body">RE: @Model.AllPosts.Single(p => p.Id.ToString() == item.PostParent).Text</a></h6>
                                                         <button class="btn btn-primary float-right" type="button" data-toggle="modal" data-target="#threadModal">
                                                             <i class="bi bi-reply"></i>
                                                         </button>

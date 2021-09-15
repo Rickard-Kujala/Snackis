@@ -56,6 +56,7 @@ namespace Snackis.Pages.Admin
         public Guid DeleteforumId { get; set; }
         [BindProperty(SupportsGet =true)]
         public Guid DeletePostId { get; set; }
+        public Guid ReversePostId { get; set; }
         private readonly RoleManager<IdentityRole> _roleManager;
         public UserManager<SnackisUser> _userManager;
         private readonly IPostRepository _postRepository;
@@ -80,7 +81,15 @@ namespace Snackis.Pages.Admin
             {
                 var postToBeCencured = AllPosts.FirstOrDefault(p=>p.Id==DeletePostId);
                 postToBeCencured.Text = "inlägget har tagits bort av admin";
+                postToBeCencured.AbuseReport = false;
                 await _postRepository.UpdatePost(DeletePostId,postToBeCencured);
+            }
+            if (ReversePostId.ToString() != "00000000-0000-0000-0000-000000000000")
+            {
+                var postToBeReversed = AllPosts.FirstOrDefault(p => p.Id == ReversePostId);
+                postToBeReversed.Text = "inlägget har tagits bort av admin";
+                postToBeReversed.AbuseReport = false;
+                await _postRepository.UpdatePost(DeletePostId, postToBeReversed);
             }
             if (DeleteCategoryId.ToString() != "00000000-0000-0000-0000-000000000000")
             {
